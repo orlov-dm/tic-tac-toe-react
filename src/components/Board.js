@@ -37,16 +37,16 @@ class Board extends Component {
         }
 
         const value = this.props.values[row][column] ? this.props.values[row][column] : ""/* row + "_" + column */;
-        return <Square key = {row + "_" + column}
+        return <Square key = {row + "_" + column + "_square"}
             isWinner = {isWinner}
             value = {value}
-            onClick={() => this.props.onClick(row, column)}            
-        />
+                onClick={() => this.props.onClick(row, column)}            
+                />            
     }
 
     componentDidUpdate() {
-        let result = document.querySelector(".board");
-        result.style.setProperty("--count", this.props.fieldsCount);        
+        let appNode = document.querySelector(".App");
+        appNode.style.setProperty("--count", this.props.fieldsCount);        
     }
 }
 

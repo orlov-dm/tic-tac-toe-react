@@ -2,10 +2,49 @@ html,
 body {
   width: 100%;
   height: 100%;
+
+  --primary-color: mediumaquamarine;
+  --secondary-color: gray;
+  --text-color: white;
+  --background-color: white;
+  --border-color: lightgray;
+  --winner-color: brown;  
+
+  --elements-size: 60px;
+  --spacing: 30px;
+  --border-width: 1px;
+  --settings-width: 300px;
+}
+
+button {
+  background-color: var(--primary-color);
+  height: 30px;
+  transition: 0.3s;
+  border: none;
+}
+
+button:hover {
+  border-left: 1px solid var(--border-color);  
+  border-top: 1px solid var(--border-color);  
+}
+
+button:active {
+  border-left: 1px solid var(--border-color);  
+  border-top: 1px solid var(--border-color);  
+  transform: translateX(1px) translateY(1px);  
+}
+
+button.icon-button:hover {
+  border: none;
+}
+
+button.icon-button:active {  
+  border: none;
+  transform: translateX(1px) translateY(1px);  
 }
 
 body {
-  background-color: gray;
+  background-color: var(--secondary-color);
 }
 
 #root {
@@ -14,31 +53,13 @@ body {
   flex-direction: column;  
 }
 
-
-.square { 
-  /* positioning */
-  display: flex;
-  align-items: center;
-  justify-content: center;  
-}
-
-.board > .square {
-  /* decoration */
-  border: 1px solid black;  
-  cursor: pointer;  
-  user-select: none;    
-}
-
-.square > p {
-  font-size: calc(var(--square-size) - 20px);    
-  font-weight: bold;
-}
-
-.square.win {
-  color: red;
-}
-
 .App {
+  --square-size: 60px;
+  --count: 3;
+
+
+  min-width: calc(var(--square-size) * var(--count) + var(--square-size));
+
   flex-grow: 1;
   /* margin-left: 100px;
   margin-right: 100px; */
@@ -46,49 +67,53 @@ body {
  /*  width: 100%;
   height: 100%; */
   
-  background-color: white;
+  background-color: var(--background-color);
 
   display: flex;
-  flex-direction: column;
+  flex-direction: column;    
+}
+
+.App > * {
+  margin: 0;
 }
 
 .App > :not(:last-child) {
-  border-bottom: 1px solid lightgray;
+  border-bottom: var(--border-width) solid var(--secondary-color);
 }
 
 .App > header {
-  background-color: mediumaquamarine;
-  color: white;  
+  background-color: var(--primary-color);
+  color: var(--text-color);  
   text-align: center;
+  height: var(--square-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.App > header > * {
+  margin: 0;  
 }
 
 .App > main {
   flex-grow: 1;
 }
 
-.App > main > .game > * {
-  /* border-top: 1px solid black;
-  border-bottom: 1px solid black; */
-}
-
 .App > footer {
-  background-color: gray;
-  color: white;  
+  background-color: var(--secondary-color);
+  color: var(--text-color);
   text-align: right;
 }
 
-
-
 .game {
   display: grid;
-  grid-gap: 10px;    
-  grid-template-columns: auto 1fr;
-  grid-template-rows: auto 1fr 1fr auto;
-  grid-template-areas: 
-      "settings ."
-      "board board"
-      "board board"
-      "status status";
+  grid-gap: var(--spacing);    
+  grid-template-columns: auto;
+  grid-template-rows: 1fr 1fr auto;
+  grid-template-areas:      
+      "board"
+      "board"
+      "status";
   height: 100%;
 
   min-height: var(--board-size);
@@ -96,26 +121,96 @@ body {
 }
 
 .board {
-  --square-size: 60px;
-  --count: 3;
-  --board-size: calc(var(--square-size) * var(--count));
+  --board-size: calc(var(--square-size) * var(--count));  
   
   display: grid;
   grid-template-columns: repeat(var(--count), var(--square-size));
   grid-template-rows: repeat(var(--count), var(--square-size) );
+  border: calc(var(--border-width)*2) var(--primary-color) solid;
 
   grid-area: board;
   justify-self: center;
   align-self: center;
 }
 
-.panel-settings {
-  display: grid;
-  grid-auto-rows: minmax(30px, auto);
-  grid-template-columns: repeat(2, auto);
-  justify-items: center;
+.board > .square {
+  /* positioning */
+  display: flex;
   align-items: center;
-  grid-area: settings;
+  justify-content: center;  
+  /* decoration */
+  border: var(--border-width) solid var(--border-color);
+  cursor: pointer;  
+  user-select: none;    
+}
+
+.board > .square > p {
+  font-size: calc(var(--square-size) - 20px);    
+  font-weight: bold;
+}
+
+.panel-settings {
+  background-color: var(--primary-color);
+
+  border-right: var(--border-width) solid var(--secondary-color);
+  height: 100%;
+  width: var(--settings-width);
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;  
+  overflow-x: hidden;
+  transition: 0.5s;  
+  padding: var(--elements-size) var(--spacing) var(--spacing) var(--spacing);  
+  transform: translateX(-100%);
+}
+
+.panel-settings.opened {
+  transform: translateX(0%);
+}
+
+.panel-settings > div {
+  display: grid;
+  grid-auto-rows: minmax(var(--spacing), auto);
+  grid-template-columns: 1fr 100px;
+  justify-items: center;
+  align-items: center;  
+  background-color: white;
+  border: var(--border-width) solid var(--secondary-color);      
+  padding: var(--spacing);
+}  
+
+.panel-settings div > :not(:last-child) {
+  margin-bottom: var(--spacing);
+}
+
+.panel-settings div > label {
+  width: 100%;
+  margin-left: var(--spacing);
+  word-break: break-all;
+}
+
+.panel-settings div > input {
+  width: 50px;
+}
+
+button.icon-button.button-settings {  
+  --size: var(--spacing);
+  width: var(--size);
+  height: var(--size);
+
+  position: absolute;
+  top: calc(var(--size)/2);
+  left: calc(var(--size)/2);
+  background: none;
+  border: 0;
+  z-index: 1000;  
+  transition: 0.5s;
+  transform: translateX(0);  
+}
+
+button.icon-button.button-settings.opened {
+  transform: translateX(calc(var(--settings-width) + var(--spacing)*2 + var(--border-width)));
 }
 
 .status {
@@ -123,14 +218,52 @@ body {
   justify-self: center;
   align-self: center;
   display: flex;
-  width: 100%;
+  width: 100%;  
   align-content: center;
   justify-content: center;
+  color: var(--text-color);
+  border-top: var(--border-width) solid var(--secondary-color);
 
-  background-color: mediumaquamarine;
+  background-color: var(--primary-color);
+  height: var(--square-size);  
 }
 
 .status > * {
   margin: 5px;
   align-self: center;    
+}
+.status .square.X > p,
+.status .square.O > p {
+  color: var(--secondary-color);   
+}
+
+.square.X > p {
+  color: var(--primary-color);
+}
+
+.square.O > p {
+  color: var(--secondary-color);
+}
+
+.square.win > p {
+  color: var(--winner-color);
+  transition: all 500ms;
+}
+
+
+.square-value-enter {
+  opacity: 0.01;
+  transform: scale(3);
+}
+.square-value-enter-active {
+  opacity: 1;
+  transform: scale(1);
+  transition: all 500ms;
+}
+
+.square.win > p.square-value-enter-active {
+  opacity: 1;
+  color: var(--winner-color) !important;
+  transform: scale(1);
+  transition: all 500ms;
 }

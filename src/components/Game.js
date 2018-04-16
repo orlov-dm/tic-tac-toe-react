@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 import Board from './Board';
-import * as Constants from '../constants/constants';
+import Constants from '../constants/constants';
 import Square from './Square';
 
 //TODO values as object
 
-class Game extends Component { 
-    X_ELEMENT = 'X';
-    O_ELEMENT = 'O';
+class Game extends Component {     
     DRAW_ELEMENT = 'Draw';
     MIN_FIELD_SIZE = 3;
     MAX_FIELD_SIZE = 10;
@@ -16,6 +14,7 @@ class Game extends Component {
         this.state = {                        
             fieldsCount: this.MIN_FIELD_SIZE,
             winCount: this.MIN_FIELD_SIZE,
+            settingsOpened: false,
             ...this.getInitialState(this.MIN_FIELD_SIZE)
         };        
     }
@@ -25,14 +24,19 @@ class Game extends Component {
         for(let i = 0; i < fieldsCount; ++i) {
             values[i] = [];
             for(let j = 0; j < fieldsCount; ++j) {
-                values[i][j] = null;
+                /* if(j !== fieldsCount - 1) {
+                    values[i][j] = Constants.X_ELEMENT;
+                } else {
+                    values[i][j] = null;
+                } */
+                values[i][j] = null;                
             }
         }
         let initialState = {                
-            turn: this.X_ELEMENT,
+            turn: Constants.X_ELEMENT,
             values: values,            
             winner: null,
-            winIndexes: null,            
+            winIndexes: null
         }        
         return initialState;
     }
@@ -43,16 +47,12 @@ class Game extends Component {
         const winner = this.state.winner;
         const values = this.state.values;
         const turn = this.state.turn;
-        if(winner) {
-            if(winner === this.DRAW_ELEMENT) {
-                status = `${winner}!`;
-            } else {                
-                square = <Square
-                        isWinner = {true}
-                        value = {winner}
-                />;            
-                status = [<h2 key="1">{square}</h2>, <h2 key="2">is a winner!</h2>];
-            }
+        if(winner) {                        
+            square = <Square
+                    isWinner = {true}
+                    value = {winner}
+            />;            
+            status = [<h2 key="1">Winner </h2>, <h2 key="2">{square}</h2>];
         } else {
             let isFinished = true;
             for(let i = 0; i < values.length; ++i) {
@@ -64,8 +64,8 @@ class Game extends Component {
                 }
             }
 
-            if(isFinished)  {
-                status = `${this.DRAW_ELEMENT}!`;
+            if(isFinished)  {                
+                status = <h2>{this.DRAW_ELEMENT}!</h2>;
             } else {
                 square = <Square                            
                             isWinner = {false}
@@ -78,8 +78,9 @@ class Game extends Component {
     }
 
     render() {
-        return (
-            <div className="game">
+        let settingsOpenedClass = this.state.settingsOpened ? " opened" : "";
+        return (            
+            <div className="game">                
                 <Board 
                     fieldsCount={this.state.fieldsCount}
                     winCount={this.state.winCount}
@@ -88,15 +89,21 @@ class Game extends Component {
                     winIndexes={this.state.winIndexes}
                     onClick={(row, column) => this.handleSquareClick(row, column)}
                 />                
-                <div className="panel-settings">
-                    <label htmlFor="fields_count">Field size:</label>
-                    <div><input id="fields_count" min="1" max={this.MAX_FIELD_SIZE} type="number" value={this.state.fieldsCount} onChange={(event) => this.handleFieldsCountChange(event.target.value)}/></div>
-                    <label htmlFor="win_count">Number of fields to win:</label>
+                <button className={`icon-button button-settings${settingsOpenedClass}`} onClick={() => this.handleSettingsClick()}>
+                    {settingsOpenedClass ? '<-' : '->'}
+                </button>                
+                <div className={`panel-settings${settingsOpenedClass}`}>
                     <div>
-                        <input id="win_count" type="number" value={this.state.winCount} onChange={(event) => this.handleWinCountChange(event.target.value)}/>                    
+                        <label htmlFor="fields_count">Field size:</label>
+                        <div><input id="fields_count" min="1" max={this.MAX_FIELD_SIZE} type="number" value={this.state.fieldsCount} onChange={(event) => this.handleFieldsCountChange(event.target.value)}/></div>
+                        <label htmlFor="win_count">Fields to win:</label>
+                        <div>
+                            <input id="win_count" type="number" value={this.state.winCount} onChange={(event) => this.handleWinCountChange(event.target.value)}/>                    
+                        </div>
+                        <div></div>
+                        <div><button id="restart" onClick={() => this.handleRestart()}>Restart</button></div>
                     </div>
-                    <div><button id="restart" onClick={() => this.handleRestart()}>Restart</button></div>
-                </div>                
+                </div>
                 <div className="status">{this.renderStatus()}</div>
             </div>
         );
@@ -106,6 +113,13 @@ class Game extends Component {
         this.setState({            
             ...this.getInitialState(this.state.fieldsCount)
         });           
+    }
+
+    handleSettingsClick() {
+        const settingsOpened = this.state.settingsOpened;
+        this.setState({            
+            settingsOpened: !settingsOpened
+        });
     }
 
     handleFieldsCountChange(count) {
@@ -132,14 +146,14 @@ class Game extends Component {
     }
 
     handleSquareClick(row, column) {
-        const values = this.state.values.slice(0, this.state.values.length);
+        let values = this.state.values.slice(0, this.state.values.length);
         const turn = this.state.turn;        
 
         if(this.state.winner || values[row][column]) {
             return;
         }
 
-        values[row][column] = turn === this.X_ELEMENT ? this.X_ELEMENT : this.O_ELEMENT; 
+        values[row][column] = turn === Constants.X_ELEMENT ? Constants.X_ELEMENT : Constants.O_ELEMENT; 
 
         let winIndexes = this.checkWinner(row, column);
         let state = {};
@@ -150,7 +164,7 @@ class Game extends Component {
             }
         }
         state.values = values;
-        state.turn = turn === this.X_ELEMENT ? this.O_ELEMENT : this.X_ELEMENT;
+        state.turn = turn === Constants.X_ELEMENT ? Constants.O_ELEMENT : Constants.X_ELEMENT;
         this.setState(state);
     }
 
