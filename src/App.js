@@ -11,7 +11,7 @@ class App extends Component {
           <Game/>         
         </main>
         <footer>
-          Contact information: <a href="mailto:dm.ed.orlov@gmail.com">D.E.Orlov</a>
+          Contact information: <a href="https://github.com/orlov-dm">D.E.Orlov</a>
         </footer>
       </div>
     );
