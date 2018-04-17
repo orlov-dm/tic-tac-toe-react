@@ -14,9 +14,14 @@ class Game extends Component {
         this.state = {                        
             fieldsCount: this.MIN_FIELD_SIZE,
             winCount: this.MIN_FIELD_SIZE,
+            tempFieldsCount: this.MIN_FIELD_SIZE,
+            tempWinCount: this.MIN_FIELD_SIZE,
             settingsOpened: false,
             ...this.getInitialState(this.MIN_FIELD_SIZE)
         };        
+
+        // this.handleFieldsCountChange = this.handleFieldsCountChange.bind(this);
+        // this.handleWinCountChange = this.handleWinCountChange.bind(this);
     }
 
     getInitialState(fieldsCount) {        
@@ -31,12 +36,12 @@ class Game extends Component {
                 } */
                 values[i][j] = null;                
             }
-        }
+        }        
         let initialState = {                
             turn: Constants.X_ELEMENT,
             values: values,            
             winner: null,
-            winIndexes: null
+            winIndexes: null        
         }        
         return initialState;
     }
@@ -95,24 +100,54 @@ class Game extends Component {
                 <div className={`panel-settings${settingsOpenedClass}`}>
                     <div>
                         <label htmlFor="fields_count">Field size:</label>
-                        <div><input id="fields_count" min="1" max={this.MAX_FIELD_SIZE} type="number" value={this.state.fieldsCount} onChange={(event) => this.handleFieldsCountChange(event.target.value)}/></div>
+                        <div><input id="fields_count" min="1" max={this.MAX_FIELD_SIZE} type="number" value={this.state.tempFieldsCount} onChange={(event) => this.handleFieldsCountChange(event.target.value)}/></div>
                         <label htmlFor="win_count">Fields to win:</label>
                         <div>
-                            <input id="win_count" type="number" value={this.state.winCount} onChange={(event) => this.handleWinCountChange(event.target.value)}/>                    
+                            <input id="win_count" type="number" value={this.state.tempWinCount} onChange={(event) => this.handleWinCountChange(event.target.value)}/>                    
                         </div>
                         <div></div>
-                        <div><button id="restart" onClick={() => this.handleRestart()}>Restart</button></div>
+                        <div><button id="save" onClick={() => this.handleSave()}>Save</button></div>
                     </div>
                 </div>
-                <div className="status">{this.renderStatus()}</div>
+                <div className="status">{this.renderStatus()} <button id="restart" class="inverse" onClick={() => this.handleRestart()}>Restart</button></div>
             </div>
         );
     }    
 
+
+    handleSave() {
+        let {tempWinCount, tempFieldsCount, winCount, fieldsCount} = this.state;
+        if(tempWinCount == winCount && tempFieldsCount == fieldsCount) {
+            return;
+        }
+        this.handleRestart();
+    }
     handleRestart() {
-        this.setState({            
-            ...this.getInitialState(this.state.fieldsCount)
-        });           
+        let {tempWinCount, tempFieldsCount} = this.state;        
+        let state = null;        
+        if(isNaN(tempFieldsCount) || tempFieldsCount < this.MIN_FIELD_SIZE) {
+            alert(`Field size less than ${this.MIN_FIELD_SIZE}`);
+            tempFieldsCount = this.MIN_FIELD_SIZE;
+        } else if(tempFieldsCount > this.MAX_FIELD_SIZE) {
+            alert(`Field size more than ${this.MAX_FIELD_SIZE}`);            
+            tempFieldsCount = this.MAX_FIELD_SIZE;
+        }
+
+        if(isNaN(tempWinCount) || tempWinCount <= 0) {
+            alert("Fields to win less than 0");            
+            tempWinCount = 1;
+        } else if(tempWinCount > this.MAX_FIELD_SIZE || tempWinCount > this.state.fieldsCount) {
+            alert("Fields to win more than Field size");
+            tempWinCount = tempFieldsCount;
+        }            
+                
+        this.setState({
+            ...this.getInitialState(tempFieldsCount),
+            winCount: tempWinCount,
+            fieldsCount: tempFieldsCount,
+            tempFieldsCount,
+            tempWinCount
+        });
     }
 
     handleSettingsClick() {
@@ -122,27 +157,19 @@ class Game extends Component {
         });
     }
 
-    handleFieldsCountChange(count) {
-        let fieldsCount = parseInt(count, 10);
-        if(fieldsCount < this.MIN_FIELD_SIZE || fieldsCount > this.MAX_FIELD_SIZE) {
-            return false;
-        }
+    handleFieldsCountChange(count) {        
+        let tempFieldsCount = parseInt(count, 10);
+        
         this.setState({
-            fieldsCount,
-            ...this.getInitialState(fieldsCount)
+            tempFieldsCount            
         });           
     }
 
     handleWinCountChange(count) {
-        let winCount = parseInt(count, 10);
-        if(winCount <= 0 || winCount > this.MAX_FIELD_SIZE || winCount > this.state.fieldsCount) {
-            return false;
-        }
+        let tempWinCount = parseInt(count, 10);        
         this.setState({
-            winCount,
-            ...this.getInitialState(this.state.fieldsCount)
+            tempWinCount            
         });
-        this.handleRestart();         
     }
 
     handleSquareClick(row, column) {

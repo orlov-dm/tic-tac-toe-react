@@ -18,20 +18,24 @@ body {
 
 button {
   background-color: var(--primary-color);
-  height: 30px;
-  transition: 0.3s;
+  height: 30px;  
   border: none;
+  box-sizing: border-box;
+  border-right: 1px solid var(--border-color);  
+  border-bottom: 1px solid var(--border-color);  
 }
 
 button:hover {
-  border-left: 1px solid var(--border-color);  
-  border-top: 1px solid var(--border-color);  
+  
 }
 
-button:active {
-  border-left: 1px solid var(--border-color);  
-  border-top: 1px solid var(--border-color);  
+button:active {  
   transform: translateX(1px) translateY(1px);  
+}
+
+button.inverse {
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
 }
 
 button.icon-button:hover {
