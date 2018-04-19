@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Board from './Board';
 import Constants from '../constants/constants';
 import Square from './Square';
+import AI from './AI';
 
 //TODO values as object
 
@@ -19,7 +20,8 @@ class Game extends Component {
             settingsOpened: false,
             ...this.getInitialState(this.MIN_FIELD_SIZE)
         };        
-
+        this.ai = new AI(this);
+        this.ai.player = Constants.O_ELEMENT;
         // this.handleFieldsCountChange = this.handleFieldsCountChange.bind(this);
         // this.handleWinCountChange = this.handleWinCountChange.bind(this);
     }
@@ -109,7 +111,7 @@ class Game extends Component {
                         <div><button id="save" onClick={() => this.handleSave()}>Save</button></div>
                     </div>
                 </div>
-                <div className="status">{this.renderStatus()} <button id="restart" class="inverse" onClick={() => this.handleRestart()}>Restart</button></div>
+                <div className="status">{this.renderStatus()} <button id="restart" className="inverse" onClick={() => this.handleRestart()}>Restart</button></div>
             </div>
         );
     }    
@@ -117,14 +119,13 @@ class Game extends Component {
 
     handleSave() {
         let {tempWinCount, tempFieldsCount, winCount, fieldsCount} = this.state;
-        if(tempWinCount == winCount && tempFieldsCount == fieldsCount) {
+        if(tempWinCount === winCount && tempFieldsCount === fieldsCount) {
             return;
         }
         this.handleRestart();
     }
     handleRestart() {
         let {tempWinCount, tempFieldsCount} = this.state;        
-        let state = null;        
         if(isNaN(tempFieldsCount) || tempFieldsCount < this.MIN_FIELD_SIZE) {
             alert(`Field size less than ${this.MIN_FIELD_SIZE}`);
             tempFieldsCount = this.MIN_FIELD_SIZE;
@@ -192,26 +193,31 @@ class Game extends Component {
         }
         state.values = values;
         state.turn = turn === Constants.X_ELEMENT ? Constants.O_ELEMENT : Constants.X_ELEMENT;
-        this.setState(state);
+        this.setState(state, () => {            
+            if(!("winner" in state) && turn !== this.ai.player) {
+                this.ai.board = values;
+                this.ai.makeTurn();
+            }
+        });
     }
 
-    checkWinner(row, column) {
-        let result = this.checkWinnerHorizontal(row, column);
+    checkWinner(row, column, values, turn) {
+        values = values === undefined ? this.state.values : values;
+        turn = turn === undefined ? this.state.turn : turn;        
+        let result = this.checkWinnerHorizontal(row, column, values, turn);
          if(!result.length) {
-            result = this.checkWinnerVertical(row, column);
+            result = this.checkWinnerVertical(row, column, values, turn);
         } 
         if(!result.length) {
-            result = this.checkWinnerDiagonal(row, column);
+            result = this.checkWinnerDiagonal(row, column, values, turn);
         }
         return result;
     }
 
-    checkWinnerImpl(row, column, deltaRow, deltaColumn) {
+    checkWinnerImpl(row, column, deltaRow, deltaColumn, values, turn) {
         const DIR_FORWARD = "forward";
-        const DIR_BACKWARD = "backward";
-        const values = this.state.values;
-        let winIndexes = [{row, column}];        
-        const turn = this.state.turn;
+        const DIR_BACKWARD = "backward";        
+        let winIndexes = [{row, column}];                
         for(let direction of [DIR_FORWARD, DIR_BACKWARD]) {
             let current = {row, column};
             let currentDeltaRow = deltaRow;
@@ -242,18 +248,18 @@ class Game extends Component {
         return [];
     }
 
-    checkWinnerHorizontal(i, j) {
-        return this.checkWinnerImpl(i, j, 0, 1);
+    checkWinnerHorizontal(i, j, values, turn) {
+        return this.checkWinnerImpl(i, j, 0, 1, values, turn);
     }
     
-    checkWinnerVertical(i, j) {
-        return this.checkWinnerImpl(i, j, 1, 0);
+    checkWinnerVertical(i, j, values, turn) {
+        return this.checkWinnerImpl(i, j, 1, 0, values, turn);
     }
     
-    checkWinnerDiagonal(i, j) {
-        let leftToRight = this.checkWinnerImpl(i, j, 1, 1);
+    checkWinnerDiagonal(i, j, values, turn) {
+        let leftToRight = this.checkWinnerImpl(i, j, 1, 1, values, turn);
         if(!leftToRight.length) {
-            let rightToLeft = this.checkWinnerImpl(i, j, -1, 1);                        
+            let rightToLeft = this.checkWinnerImpl(i, j, -1, 1, values, turn);
             if(rightToLeft.length) {
                 return rightToLeft;
             }
