@@ -19,8 +19,10 @@ class Board extends Component {
         }
 
         return (
-            <div className="board">
-                {squares}
+            <div className="board-wrapper">
+                <div className="board">
+                    {squares}
+                </div>
             </div>
         )
     }

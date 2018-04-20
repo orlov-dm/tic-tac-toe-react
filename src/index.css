@@ -1,5 +1,71 @@
+html,
+body {
+  width: 100%;
+  height: 100%;
+
+  --primary-color: mediumaquamarine;
+  --secondary-color: gray;
+  --text-color: lightyellow;
+  --background-color: lightyellow;
+  --border-color: lightgray;
+  --winner-color: brown;  
+  --square-background-color: var(--primary-color);
+  --square-color: var(--secondary-color);
+  --square-secondary-color: lightyellow;
+
+
+/*  --primary-color: rgba(102, 205, 171, 0.596);
+ --secondary-color: lightyellow;
+ --text-color: black;
+ --background-color: rgba(238, 238, 113, 0.856);
+ --border-color: gray;
+ --winner-color: yellow;   */
+
+
+  --elements-size: 60px;
+  --spacing: 1vh;
+  --border-width: 1px;
+  --settings-width: 300px;
+}
+
 body {
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
+  font-family: serif;
+  background-color: var(--secondary-color);  
+}
+
+button {
+  background-color: var(--primary-color);
+  height: 30px;
+  width: var(--elements-size);  
+  border: none;
+  box-sizing: border-box;
+  border-right: 1px solid var(--border-color);  
+  border-bottom: 1px solid var(--border-color);  
+}
+
+button:active {  
+  transform: translateX(1px) translateY(1px);  
+}
+
+button.inverse {
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
+}
+
+button.icon-button:hover {
+  border: none;
+}
+
+button.icon-button:active {  
+  border: none;
+  transform: translateX(1px) translateY(1px);  
+}
+
+#root {
+  height: 100%;
+  display: flex;
+  flex-direction: column; 
+  overflow-x: hidden; 
 }

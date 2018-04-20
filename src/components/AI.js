@@ -2,13 +2,16 @@ import Constants from '../constants/constants';
 
 const SCORE = 10;
 const DEPTH = 7;
+const DEBUG = false;
 
 class AI {
     constructor(game) {
         this.game = game;
         this.level = 0;
 
-        this.allIndexes = [];
+        if(DEBUG) {
+            this.allIndexes = [];
+        }
     }
 
     static get SCORE() {
@@ -42,9 +45,11 @@ class AI {
     makeTurn() {
         this.negamax(this.board, AI.DEPTH, -Infinity, Infinity, 1);
         if (this.resIndex) {
-            this.game.handleSquareClick(this.resIndex.row, this.resIndex.column);
+            this.game.makeTurn(this.resIndex.row, this.resIndex.column);
             this.resIndex = null;
-            this.allIndexes = [];
+            if(DEBUG) {
+                this.allIndexes = [];
+            }
         }
     }
 
@@ -91,7 +96,7 @@ class AI {
             if (depth === AI.DEPTH && value > best) {
                 this.resIndex = index;
             }
-            if (depth === AI.DEPTH) {
+            if (DEBUG && depth === AI.DEPTH) {
                 this.allIndexes.push({
                     index,
                     value

@@ -1,76 +1,8 @@
-html,
-body {
-  width: 100%;
-  height: 100%;
-
-  --primary-color: mediumaquamarine;
-  --secondary-color: gray;
-  --text-color: white;
-  --background-color: white;
-  --border-color: lightgray;
-  --winner-color: brown;  
-
-  --elements-size: 60px;
-  --spacing: 30px;
-  --border-width: 1px;
-  --settings-width: 300px;
-}
-
-button {
-  background-color: var(--primary-color);
-  height: 30px;  
-  border: none;
-  box-sizing: border-box;
-  border-right: 1px solid var(--border-color);  
-  border-bottom: 1px solid var(--border-color);  
-}
-
-button:hover {
-  
-}
-
-button:active {  
-  transform: translateX(1px) translateY(1px);  
-}
-
-button.inverse {
-  background-color: var(--secondary-color);
-  color: var(--primary-color);
-}
-
-button.icon-button:hover {
-  border: none;
-}
-
-button.icon-button:active {  
-  border: none;
-  transform: translateX(1px) translateY(1px);  
-}
-
-body {
-  background-color: var(--secondary-color);
-}
-
-#root {
-  height: 100%;
-  display: flex;
-  flex-direction: column;  
-}
-
 .App {
   --square-size: 60px;
   --count: 3;
-
-
   min-width: calc(var(--square-size) * var(--count) + var(--square-size));
-
   flex-grow: 1;
-  /* margin-left: 100px;
-  margin-right: 100px; */
-  
- /*  width: 100%;
-  height: 100%; */
-  
   background-color: var(--background-color);
 
   display: flex;
@@ -82,17 +14,19 @@ body {
 }
 
 .App > :not(:last-child) {
-  border-bottom: var(--border-width) solid var(--secondary-color);
+  box-shadow: 3px 0px 2px grey;
 }
 
 .App > header {
   background-color: var(--primary-color);
   color: var(--text-color);  
-  text-align: center;
-  height: var(--square-size);
+  text-align: center;  
+
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-basis: 4vh;  
+  min-height: 50px;
 }
 
 .App > header > * {
@@ -100,28 +34,51 @@ body {
 }
 
 .App > main {
-  flex-grow: 1;
+  flex: 1;
+  
+  display: flex;
+  flex-direction: column;
 }
 
 .App > footer {
   background-color: var(--secondary-color);
   color: var(--text-color);
   text-align: right;
+  white-space: nowrap;
 }
 
+.App .title {
+  font-size: calc(30px + 2vh);
+  white-space: nowrap;
+}
+
+.game-wrapper {
+  flex: 1;
+
+  display: flex;
+}
 .game {
-  display: grid;
+  display: grid;  
   grid-gap: var(--spacing);    
   grid-template-columns: auto;
-  grid-template-rows: 1fr 1fr auto;
+  grid-template-rows: 1fr auto;
   grid-template-areas:      
       "board"
-      "board"
       "status";
-  height: 100%;
 
   min-height: var(--board-size);
-  /* padding: 25px;  */ 
+  padding-top: var(--spacing);
+  flex: 1;
+}
+
+.board-wrapper {
+  grid-area: board;
+  justify-self: center;
+  align-self: center;
+  flex: 1;
+
+  display: flex;  
+  flex-direction: column;
 }
 
 .board {
@@ -130,33 +87,49 @@ body {
   display: grid;
   grid-template-columns: repeat(var(--count), var(--square-size));
   grid-template-rows: repeat(var(--count), var(--square-size) );
-  border: calc(var(--border-width)*2) var(--primary-color) solid;
-
-  grid-area: board;
-  justify-self: center;
-  align-self: center;
+  /* border: calc(var(--border-width)*2) var(--border-color) solid; */
 }
 
-.board > .square {
-  /* positioning */
+@keyframes appear {
+  from {
+    opacity: 0.01;
+    transform: scale(3);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.board .square {
+  border: var(--border-width) solid var(--background-color);
+  cursor: pointer;  
+  user-select: none;
+  background-color: var(--square-background-color);
   display: flex;
   align-items: center;
-  justify-content: center;  
-  /* decoration */
-  border: var(--border-width) solid var(--border-color);
-  cursor: pointer;  
-  user-select: none;    
+  justify-content: center;     
 }
 
-.board > .square > p {
+.square > * {
   font-size: calc(var(--square-size) - 20px);    
   font-weight: bold;
+  animation: appear 0.5s;
 }
 
-.panel-settings {
-  background-color: var(--primary-color);
+.square.X > * {
+  color: var(--square-color);
+}
 
-  border-right: var(--border-width) solid var(--secondary-color);
+.square.O > * {
+  color: var(--square-secondary-color);
+}
+
+.square.win > * {
+  color: var(--winner-color);
+  transition: all 500ms;
+}
+
+.panel-settings {  
   height: 100%;
   width: var(--settings-width);
   position: fixed;
@@ -164,22 +137,27 @@ body {
   top: 0;
   left: 0;  
   overflow-x: hidden;
-  transition: 0.5s;  
-  padding: var(--elements-size) var(--spacing) var(--spacing) var(--spacing);  
+  transition: transform 0.5s;   
   transform: translateX(-100%);
+  padding: var(--spacing);
+  background-color: var(--primary-color);
 }
 
 .panel-settings.opened {
+  left: 0;
   transform: translateX(0%);
+  transition: transform 0.5s;   
+  box-shadow: 3px 0px 2px grey;
+  padding-right: calc(var(--spacing) + 30px);
 }
 
 .panel-settings > div {
   display: grid;
   grid-auto-rows: minmax(var(--spacing), auto);
-  grid-template-columns: 1fr 100px;
+  grid-template-columns: repeat(2, 1fr);
   justify-items: center;
   align-items: center;  
-  background-color: white;
+  background-color: var(--background-color);
   border: var(--border-width) solid var(--secondary-color);      
   padding: var(--spacing);
 }  
@@ -198,23 +176,35 @@ body {
   width: 50px;
 }
 
-button.icon-button.button-settings {  
-  --size: var(--spacing);
-  width: var(--size);
-  height: var(--size);
+.panel-settings .button-square {
+  height: var(--square-size);
+  width: var(--square-size);
+  font-family: serif;  
+}
+.panel-settings .button-square.on {
+  transform: translate(1px, 1px);
+  border-top: 2px solid var(--secondary-color);
+  border-left: 2px solid var(--secondary-color);
+}
 
+button.icon-button.button-settings {  
+  --size: 30px;
+  width: var(--size);
+  height: var(--size);  
   position: absolute;
-  top: calc(var(--size)/2);
-  left: calc(var(--size)/2);
+  top: 0px;
+  left: 0px;
   background: none;
   border: 0;
   z-index: 1000;  
   transition: 0.5s;
   transform: translateX(0);  
+  white-space: nowrap;
+  float: right;
 }
 
 button.icon-button.button-settings.opened {
-  transform: translateX(calc(var(--settings-width) + var(--spacing)*2 + var(--border-width)));
+  transform: translateX(calc(var(--settings-width) + var(--spacing)*2));
 }
 
 .status {
@@ -226,7 +216,7 @@ button.icon-button.button-settings.opened {
   align-content: center;
   justify-content: center;
   color: var(--text-color);
-  border-top: var(--border-width) solid var(--secondary-color);
+  box-shadow: 3px 0px 2px grey;
 
   background-color: var(--primary-color);
   height: var(--square-size);  
@@ -236,38 +226,36 @@ button.icon-button.button-settings.opened {
   margin: 5px;
   align-self: center;    
 }
-.status .square.X > p,
-.status .square.O > p {
-  color: var(--secondary-color);   
+.status .square.X > *,
+.status .square.O > * {
+  color: var(--secondary-color); 
+  margin: 0;
 }
 
-.square.X > p {
-  color: var(--primary-color);
+@media (min-width: 1900px) and (orientation: landscape) { 
+  .panel-settings {
+    left: 0;
+    transform: translateX(0%);
+    transition: transform 0.5s;   
+    box-shadow: 3px 0px 2px grey;
+    padding-right: calc(var(--spacing) + 30px);
+  }
+  button.icon-button.button-settings {
+    transform: translateX(calc(var(--settings-width) + var(--spacing)*2));
+    display: none;
+  }
 }
 
-.square.O > p {
-  color: var(--secondary-color);
-}
+@media (orientation: portrait) { 
+  .panel-settings.opened {    
+    width: calc(100% - var(--spacing) - 30px);
+  }  
 
-.square.win > p {
-  color: var(--winner-color);
-  transition: all 500ms;
-}
-
-
-.square-value-enter {
-  opacity: 0.01;
-  transform: scale(3);
-}
-.square-value-enter-active {
-  opacity: 1;
-  transform: scale(1);
-  transition: all 500ms;
-}
-
-.square.win > p.square-value-enter-active {
-  opacity: 1;
-  color: var(--winner-color) !important;
-  transform: scale(1);
-  transition: all 500ms;
+  button.icon-button.button-settings.opened {    
+    left: unset;
+    right: 0;
+    top: 0;
+    float: none;
+    transform: unset;
+  }
 }
