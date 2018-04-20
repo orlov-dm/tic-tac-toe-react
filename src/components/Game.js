@@ -38,7 +38,16 @@ class Game extends Component {
                 } */
                 values[i][j] = null;                
             }
-        }        
+        }    
+       /*  values[0][0] = Constants.X_ELEMENT;
+        values[0][1] = Constants.O_ELEMENT; */
+        // // values[0][0] = Constants.X_ELEMENT;
+        // //values[0][0] = Constants.X_ELEMENT;
+        // values[1][1] = Constants.O_ELEMENT;
+        // values[2][0] = Constants.O_ELEMENT;
+        // values[2][1] = Constants.X_ELEMENT;
+        // values[2][2] = Constants.X_ELEMENT;
+
         let initialState = {                
             turn: Constants.X_ELEMENT,
             values: values,            
