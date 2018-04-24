@@ -112,7 +112,6 @@ class AI {
         return best;
     }
 
-
     score(node, depth, color, emptyIndexes) {
         if (this.checkWinnerBoard(node, color)) {
             return AI.SCORE*depth;
