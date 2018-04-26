@@ -46,16 +46,9 @@ class Game extends Component {
 
     renderStatus() {
         let status = null;
-        let square = null;
-        const winner = this.state.winner;
-        const values = this.state.values;
-        const turn = this.state.turn;
+        const { winner, values, turn } = this.state;
         if (winner) {
-            square = <Square
-                isWinner={true}
-                value={winner}
-            />;
-            status = [<div key="1">Winner </div>, <div key="2">{square}</div>];
+            status = [<div key={1}>Winner </div>, <Square key={2} isWinner={true} value={winner} />];
         } else {
             let isFinished = true;
             for (let i = 0; i < values.length; ++i) {
@@ -70,14 +63,9 @@ class Game extends Component {
             if (isFinished) {
                 status = <div>{this.DRAW_ELEMENT}!</div>;
             } else {
-                square = <Square
-                    isWinner={false}
-                    value={turn}
-                />;
-                // status = [<div key="1">Turn of</div>, <div key="2">{square}</div>];
                 status = [
-                    <div key={1}>Turn of</div>, 
-                    <Square key={2} isWinner={false} value={turn}/>
+                    <div key={1}>Turn of</div>,
+                    <Square key={2} isWinner={false} value={turn} />
                 ];
             }
         }
@@ -85,18 +73,19 @@ class Game extends Component {
     }
 
     render() {
-        let settingsOpenedClass = this.state.settingsOpened ? " opened" : "";
-        let playAsX = this.state.settings.playAs === Constants.X_ELEMENT ? " on" : "";
-        let playAsO = this.state.settings.playAs === Constants.O_ELEMENT ? " on" : "";
+        const { fieldsCount, winCount, turn, values, winIndexes, settings, settingsOpened } = this.state;
+        const settingsOpenedClass = settingsOpened ? " opened" : "";
+        const playAsX = settings.playAs === Constants.X_ELEMENT ? " on" : "";
+        const playAsO = settings.playAs === Constants.O_ELEMENT ? " on" : "";
         return (
             <div className="game-wrapper">
                 <div className="game">
                     <Board
-                        fieldsCount={this.state.fieldsCount}
-                        winCount={this.state.winCount}
-                        turn={this.state.turn}
-                        values={this.state.values}
-                        winIndexes={this.state.winIndexes}
+                        fieldsCount={fieldsCount}
+                        winCount={winCount}
+                        turn={turn}
+                        values={values}
+                        winIndexes={winIndexes}
                         onClick={(row, column) => this.handleSquareClick(row, column)}
                     />
                     <div className="status title">{this.renderStatus()} <button id="restart" className="inverse" onClick={() => this.handleRestart()}>Restart</button></div>
@@ -105,24 +94,24 @@ class Game extends Component {
                     <div>
                         <label htmlFor="fields_count">Field size:</label>
                         <div>
-                            <input id="fields_count" min="1" max={this.MAX_FIELD_SIZE} type="number" value={this.state.settings.fieldsCount} onChange={(event) => this.handleFieldsCountChange(event.target.value)} />
+                            <input id="fields_count" min="1" max={this.MAX_FIELD_SIZE} type="number" value={settings.fieldsCount} onChange={(event) => this.handleFieldsCountChange(event.target.value)} />
                         </div>
 
                         <label htmlFor="win_count">Fields to win:</label>
                         <div>
-                            <input id="win_count" type="number" value={this.state.settings.winCount} onChange={(event) => this.handleWinCountChange(event.target.value)} />
+                            <input id="win_count" type="number" value={settings.winCount} onChange={(event) => this.handleWinCountChange(event.target.value)} />
                         </div>
 
                         <label htmlFor="ai_play">Play with AI:</label>
                         <div>
-                            <input type="checkbox" id="ai_play" checked={this.state.settings.playWithAI} onChange={(event) => this.handlePlayWithAIChange(event.target.checked)} />
+                            <input type="checkbox" id="ai_play" checked={settings.playWithAI} onChange={(event) => this.handlePlayWithAIChange(event.target.checked)} />
                         </div>
 
                         <button className={"button-square" + playAsX} onClick={() => this.handlePlayAs(Constants.X_ELEMENT)}>
-                            <Square value={Constants.X_ELEMENT}/>
+                            <Square value={Constants.X_ELEMENT} />
                         </button>
                         <button className={"button-square" + playAsO} onClick={() => this.handlePlayAs(Constants.O_ELEMENT)}>
-                            <Square value={Constants.O_ELEMENT}/>
+                            <Square value={Constants.O_ELEMENT} />
                         </button>
 
 
@@ -139,7 +128,8 @@ class Game extends Component {
 
 
     handleSave() {
-        let { winCount, fieldsCount, playWithAI, playAs } = this.state.settings;
+        let { winCount, fieldsCount, playWithAI } = this.state.settings;
+        const { playAs } = this.state.settings;
         if (isNaN(fieldsCount) || fieldsCount < this.MIN_FIELD_SIZE) {
             alert(`Field size less than ${this.MIN_FIELD_SIZE}`);
             fieldsCount = this.MIN_FIELD_SIZE;
@@ -156,12 +146,12 @@ class Game extends Component {
             winCount = fieldsCount;
         }
 
-        if(playWithAI && !this.canAllowAI()) {            
+        if (playWithAI && !this.canAllowAI()) {
             playWithAI = false;
-        }   
+        }
         const settings = {
             winCount,
-            fieldsCount,            
+            fieldsCount,
             playWithAI,
             playAs
         };
@@ -169,10 +159,10 @@ class Game extends Component {
             ...this.getInitialState(fieldsCount),
             ...settings,
             settings
-        });             
+        });
     }
 
-    handleRestart() {               
+    handleRestart() {
         const fieldsCount = this.state.fieldsCount;
         this.setState({
             ...this.getInitialState(fieldsCount)
@@ -187,7 +177,7 @@ class Game extends Component {
     }
 
     handleFieldsCountChange(count) {
-        let fieldsCount = parseInt(count, 10);                
+        const fieldsCount = parseInt(count, 10);
         const settings = {
             ...this.state.settings,
             fieldsCount
@@ -198,7 +188,7 @@ class Game extends Component {
     }
 
     handleWinCountChange(count) {
-        let winCount = parseInt(count, 10);        
+        const winCount = parseInt(count, 10);
         const settings = {
             ...this.state.settings,
             winCount
@@ -208,7 +198,7 @@ class Game extends Component {
         });
     }
 
-    handlePlayWithAIChange(playWithAI) {        
+    handlePlayWithAIChange(playWithAI) {
         const settings = {
             ...this.state.settings,
             playWithAI
@@ -240,38 +230,37 @@ class Game extends Component {
     }
 
     makeTurn(row, column) {
-        const turn = this.state.turn;
-        let values = this.state.values.slice(0, this.state.values.length);
-        if (this.state.winner || values[row][column]) {
+        const { turn, winner } = this.state;
+        let values = this.state.values.slice();
+        if (winner || values[row][column]) {
             return;
         }
 
         values[row][column] = turn === Constants.X_ELEMENT ? Constants.X_ELEMENT : Constants.O_ELEMENT;
 
-        let winIndexes = this.checkWinner(row, column);
-        let state = {};
+        const winIndexes = this.checkWinner(row, column);
+        let state = {
+            values,
+            turn: turn === Constants.X_ELEMENT ? Constants.O_ELEMENT : Constants.X_ELEMENT
+        };
         if (winIndexes.length) {
             state = {
                 winner: turn,
                 winIndexes
             }
         }
-        state.values = values;
-        state.turn = turn === Constants.X_ELEMENT ? Constants.O_ELEMENT : Constants.X_ELEMENT;
         this.setState(state);
     }
 
     canAllowAI() {
-        if(this.state.settings.fieldsCount > 5) {
+        if (this.state.settings.fieldsCount > 5) {
             alert("AI is too slow with much fields");
             return false;
         }
         return true;
     }
 
-    checkWinner(row, column, values, turn) {
-        values = values === undefined ? this.state.values : values;
-        turn = turn === undefined ? this.state.turn : turn;
+    checkWinner(row, column, values = this.state.values, turn = this.state.turn) {
         let result = this.checkWinnerHorizontal(row, column, values, turn);
         if (!result.length) {
             result = this.checkWinnerVertical(row, column, values, turn);
@@ -325,9 +314,9 @@ class Game extends Component {
     }
 
     checkWinnerDiagonal(i, j, values, turn) {
-        let leftToRight = this.checkWinnerImpl(i, j, 1, 1, values, turn);
+        const leftToRight = this.checkWinnerImpl(i, j, 1, 1, values, turn);
         if (!leftToRight.length) {
-            let rightToLeft = this.checkWinnerImpl(i, j, -1, 1, values, turn);
+            const rightToLeft = this.checkWinnerImpl(i, j, -1, 1, values, turn);
             if (rightToLeft.length) {
                 return rightToLeft;
             }
@@ -336,11 +325,12 @@ class Game extends Component {
     }
 
     componentDidUpdate() {
-        if (this.state.playWithAI &&
-            !this.state.winner &&
-            this.state.turn === this.ai.player) {
+        const { playWithAI, winner, turn, values, playAs } = this.state;
+        if (playWithAI &&
+            !winner &&
+            turn !== playAs) {
             setTimeout(() => {
-                this.ai.board = this.state.values;
+                this.ai.board = values;
                 this.ai.makeTurn();
             }, 500); //500 msec delay for smoother gameplay
         }

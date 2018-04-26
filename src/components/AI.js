@@ -67,11 +67,11 @@ class AI {
     }
 
     checkWinnerBoard(board, color) {
-        let turn = color === 1 ? this.player : this.humanPlayer;
+        const turn = color === 1 ? this.player : this.humanPlayer;
         for (let i = 0; i < board.length; ++i) {
             for (let j = 0; j < board[i].length; ++j) {
                 if (board[i][j] === turn) {
-                    let winIndexes = this.game.checkWinner(i, j, board, turn);
+                    const winIndexes = this.game.checkWinner(i, j, board, turn);
                     if (winIndexes.length) {
                         return true;
                     }
@@ -83,7 +83,7 @@ class AI {
 
     negamax(node, depth, alpha, beta, color) {
         const emptyIndexes = this.emptyIndexes(node);
-        let terminateStateScore = this.score(node, depth, color, emptyIndexes);
+        const terminateStateScore = this.score(node, depth, color, emptyIndexes);
         if(terminateStateScore !== null) {
             return terminateStateScore;
         }        
