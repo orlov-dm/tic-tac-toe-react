@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import Board from './Board';
 import Constants from '../constants/constants';
 import Square from './Square';
-import AI from './AI';
+import AI from '../core/AI';
+import GameCore from '../core/Game';
 
 //TODO values as object
 
@@ -23,6 +24,10 @@ class Game extends Component {
             settings,
             ...this.getInitialState(this.MIN_FIELD_SIZE)
         };
+
+        this.gameCore = new GameCore({
+            winCount: settings.winCount
+        });
         this.ai = new AI(this);
         this.ai.player = Constants.O_ELEMENT;
     }
@@ -155,6 +160,13 @@ class Game extends Component {
             playWithAI,
             playAs
         };
+
+        if (playWithAI) {
+            this.ai.player = playAs === Constants.X_ELEMENT ? Constants.O_ELEMENT : Constants.X_ELEMENT;
+        }
+        
+        this.gameCore.winCount = winCount;
+        
         this.setState({
             ...this.getInitialState(fieldsCount),
             ...settings,
@@ -208,10 +220,7 @@ class Game extends Component {
         });
     }
 
-    handlePlayAs(playAs) {
-        if (this.state.playWithAI) {
-            this.ai.player = playAs === Constants.X_ELEMENT ? Constants.O_ELEMENT : Constants.X_ELEMENT;
-        }
+    handlePlayAs(playAs) {        
         const settings = {
             ...this.state.settings,
             playAs
@@ -238,7 +247,7 @@ class Game extends Component {
 
         values[row][column] = turn === Constants.X_ELEMENT ? Constants.X_ELEMENT : Constants.O_ELEMENT;
 
-        const winIndexes = this.checkWinner(row, column);
+        const winIndexes = this.gameCore.checkWinner(row, column, values, turn);
         let state = {
             values,
             turn: turn === Constants.X_ELEMENT ? Constants.O_ELEMENT : Constants.X_ELEMENT
@@ -258,70 +267,6 @@ class Game extends Component {
             return false;
         }
         return true;
-    }
-
-    checkWinner(row, column, values = this.state.values, turn = this.state.turn) {
-        let result = this.checkWinnerHorizontal(row, column, values, turn);
-        if (!result.length) {
-            result = this.checkWinnerVertical(row, column, values, turn);
-        }
-        if (!result.length) {
-            result = this.checkWinnerDiagonal(row, column, values, turn);
-        }
-        return result;
-    }
-
-    checkWinnerImpl(row, column, deltaRow, deltaColumn, values, turn) {
-        const DIR_FORWARD = "forward";
-        const DIR_BACKWARD = "backward";
-        let winIndexes = [{ row, column }];
-        for (let direction of [DIR_FORWARD, DIR_BACKWARD]) {
-            let current = { row, column };
-            let currentDeltaRow = deltaRow;
-            let currentDeltaColumn = deltaColumn;
-            if (direction === DIR_BACKWARD) {
-                currentDeltaRow *= -1;
-                currentDeltaColumn *= -1
-            }
-
-            current.row += currentDeltaRow;
-            current.column += currentDeltaColumn;
-
-            while (
-                current.row >= 0 &&
-                current.column >= 0 &&
-                current.row < values.length &&
-                current.column < values.length &&
-                values[current.row][current.column] === turn
-            ) {
-                winIndexes.push({ ...current });
-                current.row += currentDeltaRow;
-                current.column += currentDeltaColumn;
-            }
-            if (winIndexes.length >= this.state.winCount) {
-                return winIndexes;
-            }
-        }
-        return [];
-    }
-
-    checkWinnerHorizontal(i, j, values, turn) {
-        return this.checkWinnerImpl(i, j, 0, 1, values, turn);
-    }
-
-    checkWinnerVertical(i, j, values, turn) {
-        return this.checkWinnerImpl(i, j, 1, 0, values, turn);
-    }
-
-    checkWinnerDiagonal(i, j, values, turn) {
-        const leftToRight = this.checkWinnerImpl(i, j, 1, 1, values, turn);
-        if (!leftToRight.length) {
-            const rightToLeft = this.checkWinnerImpl(i, j, -1, 1, values, turn);
-            if (rightToLeft.length) {
-                return rightToLeft;
-            }
-        }
-        return leftToRight;
     }
 
     componentDidUpdate() {
