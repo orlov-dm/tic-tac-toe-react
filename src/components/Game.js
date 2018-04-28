@@ -28,8 +28,11 @@ class Game extends Component {
         this.gameCore = new GameCore({
             winCount: settings.winCount
         });
-        this.ai = new AI(this);
+        this.ai = new AI(this.gameCore);
         this.ai.player = Constants.O_ELEMENT;
+        this.ai.onMadeTurn = (index) => {
+            this.makeTurn(index.row, index.column);
+        };
     }
 
     getInitialState(fieldsCount) {

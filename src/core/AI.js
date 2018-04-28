@@ -9,7 +9,8 @@ let _player = null;
 let _humanPlayer = null;
 let _allIndexes = null;
 let _resultIndex = null;
-let _game = null;
+let _gameCore = null;
+let _onMadeTurn = null;
 
 function _emptyIndexes() {
     let result = [];
@@ -29,7 +30,7 @@ function _checkWinnerBoard(board, color) {
     for (let i = 0; i < board.length; ++i) {
         for (let j = 0; j < board[i].length; ++j) {
             if (board[i][j] === turn) {
-                const winIndexes = _game.gameCore.checkWinner(i, j, board, turn);
+                const winIndexes = _gameCore.checkWinner(i, j, board, turn);
                 if (winIndexes.length) {
                     return true;
                 }
@@ -84,8 +85,8 @@ function _score(node, depth, color, emptyIndexes) {
 }
 
 class AI {
-    constructor(game) {
-        _game = game;        
+    constructor(gameCore) {
+        _gameCore = gameCore;
 
         if(_DEBUG) {
             _allIndexes = [];
@@ -108,10 +109,18 @@ class AI {
         return _player;
     }
 
+    set onMadeTurn(callback) {
+        _onMadeTurn = callback;
+    }
+
     makeTurn() {
+        if(!_onMadeTurn) {
+            return;
+        }
+
         _negamax(_board, _DEPTH, -Infinity, Infinity, 1);
         if (_resultIndex) {
-            _game.makeTurn(_resultIndex.row, _resultIndex.column);
+            _onMadeTurn(_resultIndex);
             _resultIndex = null;
             if(_DEBUG) {
                 _allIndexes = [];
