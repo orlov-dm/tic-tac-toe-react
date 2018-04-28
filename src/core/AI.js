@@ -1,5 +1,3 @@
-import Constants from '../constants/constants';
-
 const _SCORE = 10;
 const _DEPTH = 7;
 const _DEBUG = false;
@@ -102,7 +100,7 @@ class AI {
 
     set player(p) {
         _player = p;
-        _humanPlayer = p === Constants.X_ELEMENT ? Constants.O_ELEMENT : Constants.X_ELEMENT;
+        _humanPlayer = -p;
     }
 
     get player() {

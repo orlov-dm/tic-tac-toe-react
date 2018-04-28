@@ -165,7 +165,7 @@ class Game extends Component {
         };
 
         if (playWithAI) {
-            this.ai.player = playAs === Constants.X_ELEMENT ? Constants.O_ELEMENT : Constants.X_ELEMENT;
+            this.ai.player = -playAs;
         }
         
         this.gameCore.winCount = winCount;
@@ -248,12 +248,12 @@ class Game extends Component {
             return;
         }
 
-        values[row][column] = turn === Constants.X_ELEMENT ? Constants.X_ELEMENT : Constants.O_ELEMENT;
+        values[row][column] = turn;
 
         const winIndexes = this.gameCore.checkWinner(row, column, values, turn);
         let state = {
             values,
-            turn: turn === Constants.X_ELEMENT ? Constants.O_ELEMENT : Constants.X_ELEMENT
+            turn: -turn
         };
         if (winIndexes.length) {
             state = {

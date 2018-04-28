@@ -38,7 +38,7 @@ class Board extends Component {
             }
         }
 
-        const value = values[row][column] ? values[row][column] : ""/* row + "_" + column */;
+        const value = values[row][column] ? values[row][column] : ""/* row + "_" + column */;        
         return <Square key={`${row}_${column}_square`}
             isWinner={isWinner}
             value={value}
