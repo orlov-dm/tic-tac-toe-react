@@ -24,13 +24,13 @@ class Game extends Component {
             playAs: Constants.X_ELEMENT,
         }
         this.state = {
-            ...settings,
-            settings,
+            ...settings, //settings as initial state
+            settings, //separate settings state
             ...this.getInitialState(Game.MIN_FIELD_SIZE)
         };
 
         this.handleRestart = this.handleRestart.bind(this);
-        
+
         this.gameCore = new GameCore({
             winCount: settings.winCount
         });
@@ -161,14 +161,14 @@ class Game extends Component {
     }
 
     handleRestart() {
-        const fieldsCount = this.state.fieldsCount;
+        const { fieldsCount } = this.state;
         this.setState({
             ...this.getInitialState(fieldsCount)
         });
     }
 
     handleSettingsClick() {
-        const settingsOpened = this.state.settingsOpened;
+        const { settingsOpened } = this.state;
         this.setState({
             settingsOpened: !settingsOpened
         });
