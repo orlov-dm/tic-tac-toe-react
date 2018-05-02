@@ -1,14 +1,13 @@
 let _winCount = null;
 
 function _checkWinnerImpl(row, column, deltaRow, deltaColumn, values, turn) {
-    const DIR_FORWARD = "forward";
-    const DIR_BACKWARD = "backward";
+
     let winIndexes = [{ row, column }];
-    for (const direction of [DIR_FORWARD, DIR_BACKWARD]) {
+    for (const direction of Game.DIRECTIONS) {
         let current = { row, column };
         let currentDeltaRow = deltaRow;
         let currentDeltaColumn = deltaColumn;
-        if (direction === DIR_BACKWARD) {
+        if (direction === Game.DIR_BACKWARD) {
             currentDeltaRow *= -1;
             currentDeltaColumn *= -1
         }
@@ -53,7 +52,11 @@ function _checkWinnerDiagonal(i, j, values, turn) {
     return leftToRight;
 }
 
-class Game {                
+class Game {
+    static DIR_FORWARD = "forward";
+    static DIR_BACKWARD = "backward";  
+    static DIRECTIONS = [Game.DIR_FORWARD, Game.DIR_BACKWARD];
+
     constructor(props) {
         const { winCount: value } = props;
         _winCount = value;
