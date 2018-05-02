@@ -190,6 +190,7 @@
 
 button.icon-button.button-settings {  
   --size: 30px;
+  color: var(--secondary-color);
   width: var(--size);
   height: var(--size);  
   position: absolute;
@@ -201,7 +202,7 @@ button.icon-button.button-settings {
   transition: 0.5s;
   transform: translateX(0);  
   white-space: nowrap;
-  float: right;  
+  float: right;      
 }
 
 button.icon-button.button-settings.opened {
