@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import faRightArrow from '@fortawesome/fontawesome-free-solid/faArrowRight';
 import faLeftArrow from '@fortawesome/fontawesome-free-solid/faArrowLeft';
+import faSync from '@fortawesome/fontawesome-free-solid/faSync';
 
 import Board from './Board';
 import Constants from '../constants/constants';
@@ -100,7 +101,11 @@ class Game extends Component {
                         winIndexes={winIndexes}
                         onClick={(row, column) => this.handleSquareClick(row, column)}
                     />
-                    <div className="status title">{this.renderStatus()} <button id="restart" className="inverse" onClick={() => this.handleRestart()}>Restart</button></div>
+                    <div className="status title">{this.renderStatus()} 
+                        <button id="restart" className="inverse" onClick={() => this.handleRestart()}>
+                            <FontAwesomeIcon icon={faSync}></FontAwesomeIcon> Restart
+                        </button>
+                    </div>
                 </div>
                 <div className={`panel-settings${settingsOpenedClass}`}>
                     <div>
