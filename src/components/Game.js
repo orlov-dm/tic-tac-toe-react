@@ -2,34 +2,35 @@ import React, { Component } from 'react';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import faRightArrow from '@fortawesome/fontawesome-free-solid/faArrowRight';
 import faLeftArrow from '@fortawesome/fontawesome-free-solid/faArrowLeft';
-import faSync from '@fortawesome/fontawesome-free-solid/faSync';
 
 import Board from './Board';
 import Constants from '../constants/constants';
 import Square from './Square';
+import Status from './Status';
 import AI from '../core/AI';
 import GameCore from '../core/Game';
 
 //TODO values as object
 
-class Game extends Component {
-    DRAW_ELEMENT = 'Draw';
-    MIN_FIELD_SIZE = 3;
-    MAX_FIELD_SIZE = 10;
+class Game extends Component {    
+    static MIN_FIELD_SIZE = 3;
+    static MAX_FIELD_SIZE = 10;
     constructor(props) {
         super(props);
         const settings = {
-            fieldsCount: this.MIN_FIELD_SIZE,
-            winCount: this.MIN_FIELD_SIZE,
+            fieldsCount: Game.MIN_FIELD_SIZE,
+            winCount: Game.MIN_FIELD_SIZE,
             playWithAI: true,
             playAs: Constants.X_ELEMENT,
         }
         this.state = {
             ...settings,
             settings,
-            ...this.getInitialState(this.MIN_FIELD_SIZE)
+            ...this.getInitialState(Game.MIN_FIELD_SIZE)
         };
 
+        this.handleRestart = this.handleRestart.bind(this);
+        
         this.gameCore = new GameCore({
             winCount: settings.winCount
         });
@@ -57,36 +58,8 @@ class Game extends Component {
         }
     }
 
-    renderStatus() {
-        let status = null;
-        const { winner, values, turn } = this.state;
-        if (winner) {
-            status = [<div key={1}>Winner </div>, <Square key={2} isWinner={true} value={winner} />];
-        } else {
-            let isFinished = true;
-            for (let i = 0; i < values.length; ++i) {
-                for (let j = 0; j < values[i].length; ++j) {
-                    if (!values[i][j]) {
-                        isFinished = false;
-                        break;
-                    }
-                }
-            }
-
-            if (isFinished) {
-                status = <div>{this.DRAW_ELEMENT}!</div>;
-            } else {
-                status = [
-                    <div key={1}>Turn of</div>,
-                    <Square key={2} isWinner={false} value={turn} />
-                ];
-            }
-        }
-        return status;
-    }
-
     render() {
-        const { fieldsCount, winCount, turn, values, winIndexes, settings, settingsOpened } = this.state;
+        const { fieldsCount, winCount, turn, values, winIndexes, winner, settings, settingsOpened } = this.state;
         const settingsOpenedClass = settingsOpened ? " opened" : "";
         const playAsX = settings.playAs === Constants.X_ELEMENT ? " on" : "";
         const playAsO = settings.playAs === Constants.O_ELEMENT ? " on" : "";
@@ -101,17 +74,18 @@ class Game extends Component {
                         winIndexes={winIndexes}
                         onClick={(row, column) => this.handleSquareClick(row, column)}
                     />
-                    <div className="status title">{this.renderStatus()} 
-                        <button id="restart" className="inverse" onClick={() => this.handleRestart()}>
-                            <FontAwesomeIcon icon={faSync}></FontAwesomeIcon> Restart
-                        </button>
-                    </div>
+                    <Status                        
+                        winner={winner}
+                        values={values}
+                        turn={turn}
+                        onRestart={this.handleRestart}
+                    />
                 </div>
                 <div className={`panel-settings${settingsOpenedClass}`}>
                     <div>
                         <label htmlFor="fields_count">Field size:</label>
                         <div>
-                            <input id="fields_count" min="1" max={this.MAX_FIELD_SIZE} type="number" value={settings.fieldsCount} onChange={(event) => this.handleFieldsCountChange(event.target.value)} />
+                            <input id="fields_count" min="1" max={Game.MAX_FIELD_SIZE} type="number" value={settings.fieldsCount} onChange={(event) => this.handleFieldsCountChange(event.target.value)} />
                         </div>
 
                         <label htmlFor="win_count">Fields to win:</label>
@@ -147,18 +121,18 @@ class Game extends Component {
     handleSave() {
         let { winCount, fieldsCount, playWithAI } = this.state.settings;
         const { playAs } = this.state.settings;
-        if (isNaN(fieldsCount) || fieldsCount < this.MIN_FIELD_SIZE) {
-            alert(`Field size less than ${this.MIN_FIELD_SIZE}`);
-            fieldsCount = this.MIN_FIELD_SIZE;
-        } else if (fieldsCount > this.MAX_FIELD_SIZE) {
-            alert(`Field size more than ${this.MAX_FIELD_SIZE}`);
-            fieldsCount = this.MAX_FIELD_SIZE;
+        if (isNaN(fieldsCount) || fieldsCount < Game.MIN_FIELD_SIZE) {
+            alert(`Field size less than ${Game.MIN_FIELD_SIZE}`);
+            fieldsCount = Game.MIN_FIELD_SIZE;
+        } else if (fieldsCount > Game.MAX_FIELD_SIZE) {
+            alert(`Field size more than ${Game.MAX_FIELD_SIZE}`);
+            fieldsCount = Game.MAX_FIELD_SIZE;
         }
 
         if (isNaN(winCount) || winCount <= 0) {
             alert("Fields to win less than 0");
             winCount = 1;
-        } else if (winCount > this.MAX_FIELD_SIZE || winCount > fieldsCount) {
+        } else if (winCount > Game.MAX_FIELD_SIZE || winCount > fieldsCount) {
             alert("Fields to win more than Field size");
             winCount = fieldsCount;
         }

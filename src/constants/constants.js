@@ -3,6 +3,7 @@ const O_ELEMENT = -1;
 
 const X_ELEMENT_NAME = 'X';
 const O_ELEMENT_NAME = 'O';
+const DRAW_ELEMENT_NAME = 'Draw';
 
 class Constants {
     static get X_ELEMENT() {
@@ -17,6 +18,10 @@ class Constants {
     }
     static get O_ELEMENT_NAME() {
         return O_ELEMENT_NAME;
+    }
+
+    static get DRAW_ELEMENT_NAME() {
+        return DRAW_ELEMENT_NAME;        
     }
 
     static getElementName(value) {
