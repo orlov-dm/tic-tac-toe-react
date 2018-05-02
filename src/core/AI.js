@@ -10,16 +10,16 @@ let _resultIndex = null;
 let _gameCore = null;
 let _onMadeTurn = null;
 
-function _emptyIndexes() {
+function _getEmptyIndexesFromBoard() {
     let result = [];
-    for (let i = 0; i < _board.length; ++i) {
-        for (let j = 0; j < _board[i].length; ++j) {
-            if (_board[i][j]) {
-                continue;
+    _board.forEach((row, i) => {
+        row.forEach((value, j) => {
+            if (value) {
+                return;
             }
             result.push({ row: i, column: j });
-        }
-    }
+        });
+    });
     return result;
 }
 
@@ -38,8 +38,9 @@ function _checkWinnerBoard(board, color) {
     return false;
 }
 
+//implementation of https://en.wikipedia.org/wiki/Negamax#Negamax_with_alpha_beta_pruning
 function _negamax(node, depth, alpha, beta, color) {
-    const emptyIndexes = _emptyIndexes(node);
+    const emptyIndexes = _getEmptyIndexesFromBoard(node);
     const terminateStateScore = _score(node, depth, color, emptyIndexes);
     if(terminateStateScore !== null) {
         return terminateStateScore;
