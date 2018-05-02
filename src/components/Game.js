@@ -1,4 +1,8 @@
 import React, { Component } from 'react';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import faRightArrow from '@fortawesome/fontawesome-free-solid/faArrowRight';
+import faLeftArrow from '@fortawesome/fontawesome-free-solid/faArrowLeft';
+
 import Board from './Board';
 import Constants from '../constants/constants';
 import Square from './Square';
@@ -128,7 +132,7 @@ class Game extends Component {
                     </div>
                 </div>
                 <button className={`icon-button button-settings${settingsOpenedClass}`} onClick={() => this.handleSettingsClick()}>
-                    {settingsOpenedClass ? '<-' : '->'}
+                    <FontAwesomeIcon icon={settingsOpenedClass ? faLeftArrow : faRightArrow}/>
                 </button>
             </div>
         );
