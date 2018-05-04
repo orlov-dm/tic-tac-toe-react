@@ -2,12 +2,6 @@ import React, { Component } from 'react';
 import Square from './Square';
 
 class Board extends Component {
-    /*
-        constructor(props) {
-            super(props);
-        } 
-    */
-
     render() {
         const { fieldsCount } = this.props;
         let squares = [];
@@ -23,14 +17,14 @@ class Board extends Component {
                     {squares}
                 </div>
             </div>
-        )
+        );
     }
 
     renderSquare(row, column) {
         const { winIndexes, values, onClick } = this.props;
         let isWinner = false;
         if (winIndexes) {
-            for (let point of winIndexes) {
+            for (const point of winIndexes) {
                 if (point.row === row && point.column === column) {
                     isWinner = true;
                     break;
@@ -38,12 +32,16 @@ class Board extends Component {
             }
         }
 
-        const value = values[row][column] ? values[row][column] : ""/* row + "_" + column */;        
-        return <Square key={`${row}_${column}_square`}
-            isWinner={isWinner}
-            value={value}
-            onClick={() => onClick(row, column)}
-        />
+        const value = values[row][column] ? values[row][column] : ""/* row + "_" + column */;
+        const key = `${row}_${column}_square`;
+
+        return (
+            <Square key={key}
+                isWinner={isWinner}
+                value={value}
+                onClick={() => onClick(row, column)}
+            />
+        );
     }
 
     componentDidUpdate() {

@@ -48,7 +48,7 @@ Status.propTypes = {
     winner: PropTypes.number,
     values: PropTypes.array.isRequired,
     turn: PropTypes.number.isRequired,
-    onRestart: PropTypes.func
+    onRestart: PropTypes.func.isRequired
 };
 
 export default Status;
