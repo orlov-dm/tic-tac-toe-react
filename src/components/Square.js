@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import Constants from '../constants/constants';
+import React from 'react';
+import Constants from '../constants/Constants';
 
 const Square = (props) => {
     let classNames = ["square"];

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import faSync from '@fortawesome/fontawesome-free-solid/faSync';
 
-import Constants from '../constants/constants';
+import Constants from '../constants/Constants';
 import Square from './Square';
 
 const Status = (props) => {
