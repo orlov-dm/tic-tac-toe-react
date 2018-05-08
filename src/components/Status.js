@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import faSync from '@fortawesome/fontawesome-free-solid/faSync';
 
-import Constants from '../constants/Constants';
+import Constants from '../constants';
 import Square from './Square';
 
 const Status = (props) => {
@@ -13,16 +13,18 @@ const Status = (props) => {
         status = [<div key={1}>Winner </div>, <Square key={2} isWinner={true} value={winner} />];
     } else {
         let isFinished = true;
-        values.forEach((row) => {
-            row.forEach((value) => {
-                if(!isFinished) {
-                    return;
-                }
-                if (!value) {
-                    isFinished = false;
-                }
+        if(values) {
+            values.forEach((row) => {
+                row.forEach((value) => {
+                    if(!isFinished) {
+                        return;
+                    }
+                    if (!value) {
+                        isFinished = false;
+                    }
+                });
             });
-        });
+        }
 
         if (isFinished) {
             status = <div>{Constants.DRAW_ELEMENT_NAME}</div>;
@@ -46,7 +48,7 @@ const Status = (props) => {
 
 Status.propTypes = {
     winner: PropTypes.number,
-    values: PropTypes.array.isRequired,
+    values: PropTypes.array,
     turn: PropTypes.number.isRequired,
     onRestart: PropTypes.func.isRequired
 };

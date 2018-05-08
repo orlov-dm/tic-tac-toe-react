@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Constants from '../constants/Constants';
+import Constants from '../constants';
 import Square from './Square';
 
 class SettingsPanel extends Component {

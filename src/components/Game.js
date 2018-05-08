@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import Board from './Board';
-import Constants from '../constants/Constants';
+import Constants from '../constants';
 import Status from './Status';
 import SettingsButton from './SettingsButton';
 import SettingsPanel from './SettingsPanel';
@@ -17,6 +18,8 @@ class Game extends Component {
             playWithAI: true,
             playAs: Constants.X_ELEMENT,
         }
+        //props.initializeBoard(Constants.MIN_FIELD_SIZE);
+
         this.state = {
             ...settings,            
             ...this.getInitialState(Constants.MIN_FIELD_SIZE)
@@ -37,24 +40,25 @@ class Game extends Component {
     }
 
     getInitialState(fieldsCount) {
-        const values = [];
+        /* const values = [];
         for (let i = 0; i < fieldsCount; ++i) {
             values[i] = [];
             for (let j = 0; j < fieldsCount; ++j) {
                 values[i][j] = null;
             }
-        }
+        } */
 
         return {
             turn: Constants.X_ELEMENT,
-            values: values,
+            /* values: values, */
             winner: null,
             winIndexes: null
         }
     }
 
     render() {
-        const { fieldsCount, winCount, turn, values, winIndexes, winner, settingsOpened } = this.state;        
+        const { fieldsCount, winCount, turn, winIndexes, winner, settingsOpened } = this.state;
+        const { boardValues } = this.props;
         return (
             <div className="game-wrapper">
                 <div className="game">
@@ -62,13 +66,13 @@ class Game extends Component {
                         fieldsCount={fieldsCount}
                         winCount={winCount}
                         turn={turn}
-                        values={values}
+                        values={boardValues}
                         winIndexes={winIndexes}
                         onClick={(row, column) => this.handleSquareClick(row, column)}
                     />
                     <Status                        
                         winner={winner}
-                        values={values}
+                        values={boardValues}
                         turn={turn}
                         onRestart={this.handleRestart}
                     />
@@ -127,7 +131,8 @@ class Game extends Component {
 
     makeTurn(row, column) {
         const { turn, winner } = this.state;
-        let values = this.state.values.slice();
+        //todo fix: make array full copy
+        let values = this.props.boardValues.slice();
         if (winner || values[row][column]) {
             return;
         }
@@ -149,16 +154,23 @@ class Game extends Component {
     }    
 
     componentDidUpdate() {
-        const { playWithAI, winner, turn, values, playAs } = this.state;
+        const { playWithAI, winner, turn, playAs } = this.state;
+        const { boardValues } = this.props;
         if (playWithAI &&
             !winner &&
             turn !== playAs) {
             setTimeout(() => {
-                this.ai.board = values;
+                this.ai.board = boardValues;
                 this.ai.makeTurn();
             }, 500); //500 msec delay for smoother gameplay
         }
     }
+}
+
+Game.propTypes = {
+    initializeBoard: PropTypes.func.isRequired,
+    setSquareValue: PropTypes.func.isRequired,
+    boardValues: PropTypes.array.isRequired
 }
 
 export default Game;

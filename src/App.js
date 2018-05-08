@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import Game from './components/Game';
+import VisibleGame from './containers/VisibleGame';
 
 class App extends Component {
   render() {
@@ -8,7 +8,7 @@ class App extends Component {
       <div className="App">
         <header><div className="title">Tic-Tac-Toe</div></header>
         <main>
-          <Game/>         
+          <VisibleGame/>
         </main>
         <footer>
           Contact information: <a href="https://github.com/orlov-dm">D.E.Orlov</a>
