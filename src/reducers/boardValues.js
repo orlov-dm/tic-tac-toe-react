@@ -1,5 +1,5 @@
 import * as ActionTypes from '../constants/ActionTypes';
-import Constants from '../constants';
+import { cloneDeep } from '../core';
 
 const getInitialBoard = (fieldsCount) => {
     const values = [];
@@ -18,9 +18,7 @@ const boardValues = (state = [], action) => {
             return getInitialBoard(action.fieldsCount);
         }
         case ActionTypes.SET_SQUARE_VALUE: {
-            let values = state.map((row) => {
-                return [...row];
-            });
+            let values = cloneDeep(state);
             values[action.index.row][action.index.column] = action.value;
             return values;
         }

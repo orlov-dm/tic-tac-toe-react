@@ -1,3 +1,5 @@
+import { cloneDeep } from '../core';
+
 const _SCORE = 10;
 const _DEPTH = 7;
 const _DEBUG = false;
@@ -93,10 +95,7 @@ class AI {
     }
     
     set board(b) {
-        _board = [];
-        b.forEach((row) => {
-            return _board.push([...row]);
-        });
+        _board = cloneDeep(b);        
     }
 
     set player(p) {

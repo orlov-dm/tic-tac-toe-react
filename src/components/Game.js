@@ -6,6 +6,7 @@ import Constants from '../constants';
 import Status from './Status';
 import SettingsButton from './SettingsButton';
 import SettingsPanel from './SettingsPanel';
+import { cloneDeep } from '../core';
 import AI from '../core/AI';
 import GameCore from '../core/Game';
 
@@ -47,7 +48,8 @@ class Game extends Component {
                 values[i][j] = null;
             }
         } */
-
+        const { initializeBoard } = this.props;
+        initializeBoard(fieldsCount);
         return {
             turn: Constants.X_ELEMENT,
             /* values: values, */
@@ -132,16 +134,14 @@ class Game extends Component {
     makeTurn(row, column) {
         const { turn, winner } = this.state;
         //todo fix: make array full copy
-        let values = this.props.boardValues.slice();
-        if (winner || values[row][column]) {
+        const { boardValues, setSquareValue } = this.props;        
+        if (winner || boardValues[row][column]) {
             return;
         }
-
-        values[row][column] = turn;
-
+        let values = cloneDeep(boardValues);        
+        /* values[row][column] = turn; */        
         const winIndexes = this.gameCore.checkWinner(row, column, values, turn);
-        let state = {
-            values,
+        let state = {            
             turn: -turn
         };
         if (winIndexes.length) {
@@ -151,6 +151,7 @@ class Game extends Component {
             }
         }
         this.setState(state);
+        setSquareValue({row, column}, turn);
     }    
 
     componentDidUpdate() {
@@ -162,7 +163,7 @@ class Game extends Component {
             setTimeout(() => {
                 this.ai.board = boardValues;
                 this.ai.makeTurn();
-            }, 500); //500 msec delay for smoother gameplay
+            }, 500); //delay for smoother gameplay
         }
     }
 }
