@@ -14,13 +14,13 @@ class SettingsPanel extends Component {
     }
 
     render() {
-        const { settingsOpened, onSave } = this.props;
+        const { isOpened, onSave } = this.props;
         const { fieldsCount, winCount, playWithAI, playAs } = this.state;
-        const settingsOpenedClass = settingsOpened ? " opened" : "";
+        const isOpenedClass = isOpened ? " opened" : "";
         const playAsX = playAs === Constants.X_ELEMENT ? " on" : "";
         const playAsO = playAs === Constants.O_ELEMENT ? " on" : "";
         return (
-            <div className={`panel-settings${settingsOpenedClass}`}>
+            <div className={`panel-settings${isOpenedClass}`}>
                 <div>
                     <label htmlFor="fields_count">Field size:</label>
                     <div>

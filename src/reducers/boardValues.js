@@ -13,18 +13,17 @@ const getInitialBoard = (fieldsCount) => {
     return values;
 }
 
-const boardValues = (state = [], action) => {
+const boardValues = (state = getInitialBoard(Constants.MIN_FIELD_SIZE), action) => {
     switch (action.type) {
-        case ActionTypes.INITIALIZE_BOARD: {
-            return getInitialBoard(action.fieldsCount);
-        }
+        case ActionTypes.INITIALIZE_BOARD:
+            return getInitialBoard(action.fieldsCount);        
         case ActionTypes.SET_SQUARE_VALUE: {
-            let values = cloneDeep(state);
+            const values = cloneDeep(state);
             values[action.index.row][action.index.column] = action.value;
             return values;
         }
         default:
-            return getInitialBoard(Constants.MIN_FIELD_SIZE);
+            return state;
     }
 }
 

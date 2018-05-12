@@ -6,7 +6,6 @@ import Constants from '../constants';
 import Status from './Status';
 import SettingsButton from './SettingsButton';
 import SettingsPanel from './SettingsPanel';
-import { cloneDeep } from '../core';
 import AI from '../core/AI';
 import GameCore from '../core/Game';
 
@@ -14,9 +13,6 @@ class Game extends Component {
     constructor(props) {
         super(props);
         const { settings } = props;
-        this.state = {                   
-            ...this.getInitialState(Constants.MIN_FIELD_SIZE)
-        };
 
         this.handleRestart = this.handleRestart.bind(this);
         this.handleSettingsClick = this.handleSettingsClick.bind(this);
@@ -29,23 +25,19 @@ class Game extends Component {
         this.ai.player = Constants.O_ELEMENT;
         this.ai.onMadeTurn = (index) => {
             this.makeTurn(index.row, index.column);
-        };
+        };    
     }
 
-    getInitialState(fieldsCount) {
-        const { initializeBoard } = this.props;
+    reinit(fieldsCount = this.props.settings.fieldsCount) {
+        const { initializeBoard, gameReset } = this.props;
         initializeBoard(fieldsCount);
-        return {
-            turn: Constants.X_ELEMENT,
-            winner: null,
-            winIndexes: null
-        }
+        gameReset();
     }
 
-    render() {
-        const { winIndexes, winner, settingsOpened, turn } = this.state;
-        const { boardValues, settings } = this.props;
-        const { fieldsCount, winCount } = settings;
+    render() {        
+        const { boardValues, settings, game } = this.props;
+        const { fieldsCount, winCount, settingsOpened } = settings;
+        const { winIndexes, winner, turn } = game;
         return (
             <div className="game-wrapper">
                 <div className="game">
@@ -65,11 +57,11 @@ class Game extends Component {
                     />
                 </div>
                 <SettingsPanel
-                    settingsOpened={settingsOpened}                   
+                    isOpened={settingsOpened}                   
                     onSave={this.handleSave}
                 />
                 <SettingsButton 
-                    settingsOpened={settingsOpened}
+                    isOpened={settingsOpened}
                     onClick={this.handleSettingsClick}
                 />
             </div>
@@ -83,65 +75,54 @@ class Game extends Component {
             this.ai.player = -settings.playAs;
         }
         
-        this.gameCore.winCount = settings.winCount;
-        
-        this.setState({
-            ...this.getInitialState(settings.fieldsCount)            
-        });
-        saveSettings(settings);
+        this.gameCore.winCount = settings.winCount;                
+        saveSettings({
+            ...settings,
+            settingsOpened: false
+        });        
+        this.reinit(settings.fieldsCount);        
     }
 
     handleRestart() {
-        const { fieldsCount } = this.props.settings;
-        this.setState({
-            ...this.getInitialState(fieldsCount)
-        });
+        this.reinit();        
     }
 
     handleSettingsClick() {
-        const { settingsOpened } = this.state;
-        this.setState({
-            settingsOpened: !settingsOpened
-        });
+        const { toggleSettings } = this.props;
+        toggleSettings();
     }    
 
-    handleSquareClick(row, column) {
-        const { turn } = this.state;
-        const { settings } = this.props;
+    handleSquareClick(row, column) {        
+        const { settings, game } = this.props;
         const { playWithAI, playAs } = settings;
+        const { turn } = game;
         if (playWithAI && turn !== playAs) {
             return false;
         }
         this.makeTurn(row, column);
     }
 
-    makeTurn(row, column) {
-        const { turn, winner } = this.state;
-        //todo fix: make array full copy
-        const { boardValues, setSquareValue } = this.props;        
+
+    makeTurn(row, column) {                
+        const { game, boardValues,
+            setSquareValue, gameTurnChange, gameSetWinner } = this.props;
+        const { turn, winner } = game;
         if (winner || boardValues[row][column]) {
             return;
         }
-        let values = cloneDeep(boardValues);        
-        /* values[row][column] = turn; */        
-        const winIndexes = this.gameCore.checkWinner(row, column, values, turn);
-        let state = {            
-            turn: -turn
-        };
-        if (winIndexes.length) {
-            state = {
-                winner: turn,
-                winIndexes
-            }
-        }
-        this.setState(state);
         setSquareValue({row, column}, turn);
+
+        const winIndexes = this.gameCore.checkWinner(row, column, boardValues, turn);        
+        if (winIndexes.length) {
+            gameSetWinner(turn, winIndexes);
+        }        
+        gameTurnChange(-turn);
     }    
 
     componentDidUpdate() {
-        const { winner, turn } = this.state;
-        const { boardValues, settings } = this.props;
+        const { boardValues, settings, game } = this.props;
         const { playWithAI, playAs } = settings;
+        const { winner, turn } = game;
         if (playWithAI &&
             !winner &&
             turn !== playAs) {
@@ -156,7 +137,13 @@ class Game extends Component {
 Game.propTypes = {
     initializeBoard: PropTypes.func.isRequired,
     setSquareValue: PropTypes.func.isRequired,
-    boardValues: PropTypes.array.isRequired
+    boardValues: PropTypes.array.isRequired,
+    settings: PropTypes.object.isRequired,
+    saveSettings: PropTypes.func.isRequired,
+    toggleSettings: PropTypes.func.isRequired,
+    gameReset: PropTypes.func.isRequired,
+    gameTurnChange: PropTypes.func.isRequired,
+    gameSetWinner: PropTypes.func.isRequired
 }
 
 export default Game;

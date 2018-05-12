@@ -15,3 +15,22 @@ export const saveSettings = (settings) => ({
     type: ActionTypes.SAVE_SETTINGS,
     settings
 });
+
+export const toggleSettings = () => ({
+    type: ActionTypes.TOGGLE_SETTINGS    
+});
+
+export const gameReset = () => ({
+    type: ActionTypes.GAME_RESET    
+});
+
+export const gameTurnChange = (turn) => ({
+    type: ActionTypes.GAME_TURN_CHANGE,
+    turn
+});
+
+export const gameSetWinner = (winner, winIndexes) => ({
+    type: ActionTypes.GAME_SET_WINNER,
+    winner, 
+    winIndexes
+});
