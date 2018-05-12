@@ -1,5 +1,6 @@
 import * as ActionTypes from '../constants/ActionTypes';
 import { cloneDeep } from '../core';
+import Constants from '../constants';
 
 const getInitialBoard = (fieldsCount) => {
     const values = [];
@@ -23,7 +24,7 @@ const boardValues = (state = [], action) => {
             return values;
         }
         default:
-            return getInitialBoard(3);
+            return getInitialBoard(Constants.MIN_FIELD_SIZE);
     }
 }
 

@@ -7,22 +7,7 @@ import './index.css';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 
-
-const getInitialBoard = (fieldsCount) => {
-    const values = [];
-    for (let i = 0; i < fieldsCount; ++i) {
-        values[i] = [];
-        for (let j = 0; j < fieldsCount; ++j) {
-            values[i][j] = null;
-        }
-    }
-    return values;
-};
-
-
-const store = createStore(reducers, {
-    boardValues: getInitialBoard(3)
-});
+const store = createStore(reducers);
 
 render(
     <Provider store={store}>

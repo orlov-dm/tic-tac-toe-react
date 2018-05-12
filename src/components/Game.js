@@ -13,16 +13,8 @@ import GameCore from '../core/Game';
 class Game extends Component {    
     constructor(props) {
         super(props);
-        const settings = {
-            fieldsCount: Constants.MIN_FIELD_SIZE,
-            winCount: Constants.MIN_FIELD_SIZE,
-            playWithAI: true,
-            playAs: Constants.X_ELEMENT,
-        }
-        //props.initializeBoard(Constants.MIN_FIELD_SIZE);
-
-        this.state = {
-            ...settings,            
+        const { settings } = props;
+        this.state = {                   
             ...this.getInitialState(Constants.MIN_FIELD_SIZE)
         };
 
@@ -41,26 +33,19 @@ class Game extends Component {
     }
 
     getInitialState(fieldsCount) {
-        /* const values = [];
-        for (let i = 0; i < fieldsCount; ++i) {
-            values[i] = [];
-            for (let j = 0; j < fieldsCount; ++j) {
-                values[i][j] = null;
-            }
-        } */
         const { initializeBoard } = this.props;
         initializeBoard(fieldsCount);
         return {
             turn: Constants.X_ELEMENT,
-            /* values: values, */
             winner: null,
             winIndexes: null
         }
     }
 
     render() {
-        const { fieldsCount, winCount, turn, winIndexes, winner, settingsOpened } = this.state;
-        const { boardValues } = this.props;
+        const { winIndexes, winner, settingsOpened, turn } = this.state;
+        const { boardValues, settings } = this.props;
+        const { fieldsCount, winCount } = settings;
         return (
             <div className="game-wrapper">
                 <div className="game">
@@ -92,25 +77,22 @@ class Game extends Component {
     }
 
 
-    handleSave(settings) {
-        const { fieldsCount, winCount, playWithAI, playAs } = settings;
-        if (playWithAI) {
-            this.ai.player = -playAs;
+    handleSave(settings) {        
+        const { saveSettings } = this.props;
+        if (settings.playWithAI) {
+            this.ai.player = -settings.playAs;
         }
         
-        this.gameCore.winCount = winCount;
+        this.gameCore.winCount = settings.winCount;
         
         this.setState({
-            ...this.getInitialState(fieldsCount),
-            fieldsCount,
-            winCount,
-            playWithAI,
-            playAs
+            ...this.getInitialState(settings.fieldsCount)            
         });
+        saveSettings(settings);
     }
 
     handleRestart() {
-        const { fieldsCount } = this.state;
+        const { fieldsCount } = this.props.settings;
         this.setState({
             ...this.getInitialState(fieldsCount)
         });
@@ -124,7 +106,9 @@ class Game extends Component {
     }    
 
     handleSquareClick(row, column) {
-        const { turn, playWithAI, playAs } = this.state;
+        const { turn } = this.state;
+        const { settings } = this.props;
+        const { playWithAI, playAs } = settings;
         if (playWithAI && turn !== playAs) {
             return false;
         }
@@ -155,8 +139,9 @@ class Game extends Component {
     }    
 
     componentDidUpdate() {
-        const { playWithAI, winner, turn, playAs } = this.state;
-        const { boardValues } = this.props;
+        const { winner, turn } = this.state;
+        const { boardValues, settings } = this.props;
+        const { playWithAI, playAs } = settings;
         if (playWithAI &&
             !winner &&
             turn !== playAs) {
