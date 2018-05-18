@@ -59,6 +59,7 @@ class Game extends Component {
                 <SettingsPanel
                     isOpened={settingsOpened}                   
                     onSave={this.handleSave}
+                    {...settings}
                 />
                 <SettingsButton 
                     isOpened={settingsOpened}
@@ -129,7 +130,7 @@ class Game extends Component {
             setTimeout(() => {
                 this.ai.board = boardValues;
                 this.ai.makeTurn();
-            }, 500); //delay for smoother gameplay
+            }, 500); //ms delay for smoother gameplay
         }
     }
 }

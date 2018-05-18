@@ -5,7 +5,7 @@ const defaultSettings = () => {
     return {
         fieldsCount: Constants.MIN_FIELD_SIZE,
         winCount: Constants.MIN_FIELD_SIZE,
-        playWithAI: false,
+        playWithAI: true,
         playAs: Constants.X_ELEMENT,
         settingsOpened: false
     };

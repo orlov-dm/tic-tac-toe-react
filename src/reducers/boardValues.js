@@ -5,10 +5,7 @@ import Constants from '../constants';
 const getInitialBoard = (fieldsCount) => {
     const values = [];
     for (let i = 0; i < fieldsCount; ++i) {
-        values[i] = [];
-        for (let j = 0; j < fieldsCount; ++j) {
-            values[i][j] = null;
-        }
+        values[i] = Array(fieldsCount);
     }
     return values;
 }

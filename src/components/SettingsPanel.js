@@ -5,11 +5,12 @@ import Square from './Square';
 class SettingsPanel extends Component {
     constructor(props) {
         super(props);        
+        const { fieldsCount, winCount, playWithAI, playAs } = props;
         this.state = {
-            fieldsCount: Constants.MIN_FIELD_SIZE,
-            winCount: Constants.MIN_FIELD_SIZE,
-            playWithAI: true,
-            playAs: Constants.X_ELEMENT
+            fieldsCount,
+            winCount,
+            playWithAI,
+            playAs
         };
     }
 
