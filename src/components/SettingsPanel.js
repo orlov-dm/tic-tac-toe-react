@@ -1,26 +1,27 @@
 import React, { Component } from 'react';
-import Constants from '../constants/Constants';
+import Constants from '../constants';
 import Square from './Square';
 
 class SettingsPanel extends Component {
     constructor(props) {
         super(props);        
+        const { fieldsCount, winCount, playWithAI, playAs } = props;
         this.state = {
-            fieldsCount: Constants.MIN_FIELD_SIZE,
-            winCount: Constants.MIN_FIELD_SIZE,
-            playWithAI: true,
-            playAs: Constants.X_ELEMENT
+            fieldsCount,
+            winCount,
+            playWithAI,
+            playAs
         };
     }
 
     render() {
-        const { settingsOpened, onSave } = this.props;
+        const { isOpened, onSave } = this.props;
         const { fieldsCount, winCount, playWithAI, playAs } = this.state;
-        const settingsOpenedClass = settingsOpened ? " opened" : "";
+        const isOpenedClass = isOpened ? " opened" : "";
         const playAsX = playAs === Constants.X_ELEMENT ? " on" : "";
         const playAsO = playAs === Constants.O_ELEMENT ? " on" : "";
         return (
-            <div className={`panel-settings${settingsOpenedClass}`}>
+            <div className={`panel-settings${isOpenedClass}`}>
                 <div>
                     <label htmlFor="fields_count">Field size:</label>
                     <div>

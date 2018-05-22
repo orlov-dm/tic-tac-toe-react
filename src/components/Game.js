@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import Board from './Board';
-import Constants from '../constants/Constants';
+import Constants from '../constants';
 import Status from './Status';
 import SettingsButton from './SettingsButton';
 import SettingsPanel from './SettingsPanel';
@@ -11,16 +12,7 @@ import GameCore from '../core/Game';
 class Game extends Component {    
     constructor(props) {
         super(props);
-        const settings = {
-            fieldsCount: Constants.MIN_FIELD_SIZE,
-            winCount: Constants.MIN_FIELD_SIZE,
-            playWithAI: true,
-            playAs: Constants.X_ELEMENT,
-        }
-        this.state = {
-            ...settings,            
-            ...this.getInitialState(Constants.MIN_FIELD_SIZE)
-        };
+        const { settings } = props;
 
         this.handleRestart = this.handleRestart.bind(this);
         this.handleSettingsClick = this.handleSettingsClick.bind(this);
@@ -33,28 +25,19 @@ class Game extends Component {
         this.ai.player = Constants.O_ELEMENT;
         this.ai.onMadeTurn = (index) => {
             this.makeTurn(index.row, index.column);
-        };
+        };    
     }
 
-    getInitialState(fieldsCount) {
-        const values = [];
-        for (let i = 0; i < fieldsCount; ++i) {
-            values[i] = [];
-            for (let j = 0; j < fieldsCount; ++j) {
-                values[i][j] = null;
-            }
-        }
-
-        return {
-            turn: Constants.X_ELEMENT,
-            values: values,
-            winner: null,
-            winIndexes: null
-        }
+    reinit(fieldsCount = this.props.settings.fieldsCount) {
+        const { initializeBoard, gameReset } = this.props;
+        initializeBoard(fieldsCount);
+        gameReset();
     }
 
-    render() {
-        const { fieldsCount, winCount, turn, values, winIndexes, winner, settingsOpened } = this.state;        
+    render() {        
+        const { boardValues, settings, game } = this.props;
+        const { fieldsCount, winCount, settingsOpened } = settings;
+        const { winIndexes, winner, turn } = game;
         return (
             <div className="game-wrapper">
                 <div className="game">
@@ -62,23 +45,24 @@ class Game extends Component {
                         fieldsCount={fieldsCount}
                         winCount={winCount}
                         turn={turn}
-                        values={values}
+                        values={boardValues}
                         winIndexes={winIndexes}
                         onClick={(row, column) => this.handleSquareClick(row, column)}
                     />
                     <Status                        
                         winner={winner}
-                        values={values}
+                        values={boardValues}
                         turn={turn}
                         onRestart={this.handleRestart}
                     />
                 </div>
                 <SettingsPanel
-                    settingsOpened={settingsOpened}                   
+                    isOpened={settingsOpened}                   
                     onSave={this.handleSave}
+                    {...settings}
                 />
                 <SettingsButton 
-                    settingsOpened={settingsOpened}
+                    isOpened={settingsOpened}
                     onClick={this.handleSettingsClick}
                 />
             </div>
@@ -86,79 +70,81 @@ class Game extends Component {
     }
 
 
-    handleSave(settings) {
-        const { fieldsCount, winCount, playWithAI, playAs } = settings;
-        if (playWithAI) {
-            this.ai.player = -playAs;
+    handleSave(settings) {        
+        const { saveSettings } = this.props;
+        if (settings.playWithAI) {
+            this.ai.player = -settings.playAs;
         }
         
-        this.gameCore.winCount = winCount;
-        
-        this.setState({
-            ...this.getInitialState(fieldsCount),
-            fieldsCount,
-            winCount,
-            playWithAI,
-            playAs
-        });
+        this.gameCore.winCount = settings.winCount;                
+        saveSettings({
+            ...settings,
+            settingsOpened: false
+        });        
+        this.reinit(settings.fieldsCount);        
     }
 
     handleRestart() {
-        const { fieldsCount } = this.state;
-        this.setState({
-            ...this.getInitialState(fieldsCount)
-        });
+        this.reinit();        
     }
 
     handleSettingsClick() {
-        const { settingsOpened } = this.state;
-        this.setState({
-            settingsOpened: !settingsOpened
-        });
+        const { toggleSettings } = this.props;
+        toggleSettings();
     }    
 
-    handleSquareClick(row, column) {
-        const { turn, playWithAI, playAs } = this.state;
+    handleSquareClick(row, column) {        
+        const { settings, game } = this.props;
+        const { playWithAI, playAs } = settings;
+        const { turn } = game;
         if (playWithAI && turn !== playAs) {
             return false;
         }
         this.makeTurn(row, column);
     }
 
-    makeTurn(row, column) {
-        const { turn, winner } = this.state;
-        let values = this.state.values.slice();
-        if (winner || values[row][column]) {
+
+    makeTurn(row, column) {                
+        const { game, boardValues,
+            setSquareValue, gameTurnChange, gameSetWinner } = this.props;
+        const { turn, winner } = game;
+        if (winner || boardValues[row][column]) {
             return;
         }
+        setSquareValue({row, column}, turn);
 
-        values[row][column] = turn;
-
-        const winIndexes = this.gameCore.checkWinner(row, column, values, turn);
-        let state = {
-            values,
-            turn: -turn
-        };
+        const winIndexes = this.gameCore.checkWinner(row, column, boardValues, turn);        
         if (winIndexes.length) {
-            state = {
-                winner: turn,
-                winIndexes
-            }
-        }
-        this.setState(state);
+            gameSetWinner(turn, winIndexes);
+        }        
+        gameTurnChange(-turn);
     }    
 
     componentDidUpdate() {
-        const { playWithAI, winner, turn, values, playAs } = this.state;
+        const { boardValues, settings, game } = this.props;
+        const { playWithAI, playAs } = settings;
+        const { winner, turn } = game;
         if (playWithAI &&
             !winner &&
             turn !== playAs) {
             setTimeout(() => {
-                this.ai.board = values;
+                this.ai.board = boardValues;
                 this.ai.makeTurn();
-            }, 500); //500 msec delay for smoother gameplay
+            }, 500); //ms delay for smoother gameplay
         }
     }
+}
+
+Game.propTypes = {
+    initializeBoard: PropTypes.func.isRequired,
+    setSquareValue: PropTypes.func.isRequired,
+    boardValues: PropTypes.array.isRequired,
+    settings: PropTypes.object.isRequired,
+    saveSettings: PropTypes.func.isRequired,
+    toggleSettings: PropTypes.func.isRequired,
+    gameReset: PropTypes.func.isRequired,
+    gameTurnChange: PropTypes.func.isRequired,
+    gameSetWinner: PropTypes.func.isRequired
 }
 
 export default Game;
