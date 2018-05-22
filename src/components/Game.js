@@ -120,19 +120,31 @@ class Game extends Component {
         gameTurnChange(-turn);
     }    
 
-    componentDidUpdate() {
-        const { boardValues, settings, game } = this.props;
+    componentDidUpdate(prevProps/* , prevState, snapshot */) {
+        console.log(this.props, prevProps);
+        const { settings, game } = this.props;
         const { playWithAI, playAs } = settings;
         const { winner, turn } = game;
+
+        const turnChanged = turn !== prevProps.game.turn;
         if (playWithAI &&
             !winner &&
-            turn !== playAs) {
+            turnChanged &&
+            playAs !== turn
+        ) {
+            const { boardValues } = this.props;
             setTimeout(() => {
                 this.ai.board = boardValues;
                 this.ai.makeTurn();
             }, 500); //ms delay for smoother gameplay
         }
     }
+
+
+    /* static getDerivedStateFromProps(nextProps, prevState) {
+        console.log(prevState, nextProps);
+        return null;
+    } */
 }
 
 Game.propTypes = {
