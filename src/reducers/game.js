@@ -5,7 +5,8 @@ const defaultState = () => {
     return {
         turn: Constants.X_ELEMENT,
         winner: null,
-        winIndexes: null
+        winIndexes: null,
+        isOnline: false
     };
 }
 

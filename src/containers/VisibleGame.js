@@ -1,11 +1,13 @@
 import { connect } from 'react-redux';
 import * as Actions from '../actions';
 import Game from '../components/Game';
+import setupSocket from '../sockets';
 
 const mapStateToProps = state => ({
     boardValues: state.boardValues,
     settings: state.settings,
-    game: state.game
+    game: state.game,
+    isSecondPlayerReady: state.app.isSecondPlayerReady    
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -16,6 +18,7 @@ const mapDispatchToProps = dispatch => ({
     gameReset: () => dispatch(Actions.gameReset()),
     gameTurnChange: (turn) => dispatch(Actions.gameTurnChange(turn)),
     gameSetWinner: (winner, winIndexes) => dispatch(Actions.gameSetWinner(winner, winIndexes)),
+    setupSocket: () => setupSocket(dispatch)
 });
 
 export default connect(

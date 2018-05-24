@@ -34,3 +34,19 @@ export const gameSetWinner = (winner, winIndexes) => ({
     winner, 
     winIndexes
 });
+
+export const gameStart = () => ({
+    type: ActionTypes.APP_GAME_START    
+});
+
+export const gameEnd = () => ({
+    type: ActionTypes.APP_GAME_END
+});
+
+export const onlineGameStart = () => ({
+    type: ActionTypes.APP_ONLINE_GAME_START    
+});
+
+export const onlineGameEnd = () => ({
+    type: ActionTypes.APP_ONLINE_GAME_END
+});

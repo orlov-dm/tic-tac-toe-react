@@ -6,41 +6,68 @@ import faSync from '@fortawesome/fontawesome-free-solid/faSync';
 import Constants from '../constants';
 import Square from './Square';
 
-const Status = (props) => {
-    let status = null;
-    const { winner, values, turn, onRestart } = props;
-    if (winner) {
-        status = [<div key={1}>Winner </div>, <Square key={2} isWinner={true} value={winner} />];
-    } else {
-        let isFinished = true;
-        if(values) {
-            values.forEach((row) => {
-                row.forEach((value) => {
-                    if(!isFinished) {
-                        return;
-                    }
-                    if (!value) {
-                        isFinished = false;
-                    }
-                });
-            });
-        }
+const getWinnerStatus = (winner) => {
+    return [<div key={1}>Winner </div>, <Square key={2} isWinner={true} value={winner} />];
+};
 
-        if (isFinished) {
-            status = <div>{Constants.DRAW_ELEMENT_NAME}</div>;
-        } else {
-            status = [
-                <div key={1}>Turn of</div>,
-                <Square key={2} isWinner={false} value={turn} />
-            ];
-        }
+const getDrawStatus = () => {
+    return <div>{Constants.DRAW_ELEMENT_NAME}</div>;
+}
+
+const getNextTurnStatus = (turn) => {
+    return [
+        <div key={1}>Turn of</div>,
+        <Square key={2} isWinner={false} value={turn} />
+    ];
+}
+
+const getWaitingStatus = () => {
+    return <div>Waiting for second player</div>;
+}
+
+const getStatusBar = (props) => {
+    const { winner, values, turn, onRestart, onExit, isSecondPlayerReady } = props;    
+    if(!isSecondPlayerReady) {
+        return getWaitingStatus();
     }
-    
+    if (winner) {
+        return getWinnerStatus(winner);
+    } 
+    if (isGameFinished(values)) {
+        return getDrawStatus();
+    } 
+    return getNextTurnStatus(turn);        
+}
+
+
+const isGameFinished = (values) => {
+    if(values) {
+        let isFinished = true;        
+        values.forEach((row) => {
+            row.forEach((value) => {
+                if(!isFinished) {
+                    return;
+                }
+                if (!value) {
+                    isFinished = false;
+                }
+            });
+        });
+        return isFinished;
+    }
+    return false;    
+}
+
+const Status = (props) => {    
+    const { onRestart, onExit } = props;    
     return (
         <div className="status title">
-            {status}
+            { getStatusBar(props) }
             <button id="restart" className="inverse" onClick={onRestart}>
                 <FontAwesomeIcon icon={faSync}></FontAwesomeIcon> Restart
+            </button>
+            <button id="quit" className="inverse" onClick={onExit}>
+                <FontAwesomeIcon icon={faSync}></FontAwesomeIcon> Exit
             </button>
         </div>
     );

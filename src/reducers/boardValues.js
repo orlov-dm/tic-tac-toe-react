@@ -6,6 +6,7 @@ const getInitialBoard = (fieldsCount) => {
     const values = [];
     for (let i = 0; i < fieldsCount; ++i) {
         values[i] = Array(fieldsCount);
+        values[i].fill(null);
     }
     return values;
 }

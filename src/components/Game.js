@@ -12,7 +12,7 @@ import GameCore from '../core/Game';
 class Game extends Component {    
     constructor(props) {
         super(props);
-        const { settings } = props;
+        const { settings, setupSocket } = props;
 
         this.handleRestart = this.handleRestart.bind(this);
         this.handleSettingsClick = this.handleSettingsClick.bind(this);
@@ -21,11 +21,16 @@ class Game extends Component {
         this.gameCore = new GameCore({
             winCount: settings.winCount
         });
-        this.ai = new AI(this.gameCore);
-        this.ai.player = Constants.O_ELEMENT;
-        this.ai.onMadeTurn = (index) => {
-            this.makeTurn(index.row, index.column);
-        };    
+
+        if(!props.isOnline) {
+            this.ai = new AI(this.gameCore);
+            this.ai.player = Constants.O_ELEMENT;
+            this.ai.onMadeTurn = (index) => {
+                this.makeTurn(index.row, index.column);
+            };    
+        } else {
+            this.socket = setupSocket();
+        }
     }
 
     reinit(fieldsCount = this.props.settings.fieldsCount) {
@@ -35,9 +40,9 @@ class Game extends Component {
     }
 
     render() {        
-        const { boardValues, settings, game } = this.props;
+        const { boardValues, settings, game, onGameEnd, isSecondPlayerReady } = this.props;
         const { fieldsCount, winCount, settingsOpened } = settings;
-        const { winIndexes, winner, turn } = game;
+        const { winIndexes, winner, turn } = game;        
         return (
             <div className="game-wrapper">
                 <div className="game">
@@ -54,6 +59,11 @@ class Game extends Component {
                         values={boardValues}
                         turn={turn}
                         onRestart={this.handleRestart}
+                        onExit={() => {
+                            this.socket.close();
+                            onGameEnd();
+                        }}
+                        isSecondPlayerReady={isSecondPlayerReady}
                     />
                 </div>
                 <SettingsPanel
@@ -121,7 +131,9 @@ class Game extends Component {
     }    
 
     componentDidUpdate(prevProps/* , prevState, snapshot */) {
-        console.log(this.props, prevProps);
+        if(this.props.isOnline) {
+            return;
+        }
         const { settings, game } = this.props;
         const { playWithAI, playAs } = settings;
         const { winner, turn } = game;
@@ -139,12 +151,6 @@ class Game extends Component {
             }, 500); //ms delay for smoother gameplay
         }
     }
-
-
-    /* static getDerivedStateFromProps(nextProps, prevState) {
-        console.log(prevState, nextProps);
-        return null;
-    } */
 }
 
 Game.propTypes = {

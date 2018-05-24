@@ -4,14 +4,15 @@ import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 import reducers from './reducers'
 import './index.css';
-import App from './App';
+import VisibleApp from './containers/VisibleApp';
 import registerServiceWorker from './registerServiceWorker';
+import setupSocket from './sockets';
 
 const store = createStore(reducers);
 
 render(
     <Provider store={store}>
-        <App />
+        <VisibleApp />
     </Provider>,
     document.getElementById('root')
 );
