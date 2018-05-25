@@ -17,11 +17,11 @@ export const saveSettings = (settings) => ({
 });
 
 export const toggleSettings = () => ({
-    type: ActionTypes.TOGGLE_SETTINGS    
+    type: ActionTypes.TOGGLE_SETTINGS
 });
 
 export const gameReset = () => ({
-    type: ActionTypes.GAME_RESET    
+    type: ActionTypes.GAME_RESET
 });
 
 export const gameTurnChange = (turn) => ({
@@ -31,12 +31,12 @@ export const gameTurnChange = (turn) => ({
 
 export const gameSetWinner = (winner, winIndexes) => ({
     type: ActionTypes.GAME_SET_WINNER,
-    winner, 
+    winner,
     winIndexes
 });
 
 export const gameStart = () => ({
-    type: ActionTypes.APP_GAME_START    
+    type: ActionTypes.APP_GAME_START
 });
 
 export const gameEnd = () => ({
@@ -44,9 +44,28 @@ export const gameEnd = () => ({
 });
 
 export const onlineGameStart = () => ({
-    type: ActionTypes.APP_ONLINE_GAME_START    
+    type: ActionTypes.APP_ONLINE_GAME_START
 });
 
 export const onlineGameEnd = () => ({
     type: ActionTypes.APP_ONLINE_GAME_END
 });
+
+const requestGamesList = () => ({ type: ActionTypes.REQUEST_GAMES_LIST });
+/* export const getGamesList = () => { type: 'FETCH_POSTS_FAILURE', error: 'Oops' } */;
+const receiveGamesList = (response) => ({ type: ActionTypes.RECEIVE_GAMES_LIST, response });
+
+export function fetchGamesList() {
+    return function (dispatch) {
+        dispatch(requestGamesList());        
+
+        return fetch(`/games_list`)
+            .then(
+                response => response.json(),                
+                error => console.log('An error occurred.', error)
+            )
+            .then(json =>
+                dispatch(receiveGamesList(json))
+            )
+    }
+}

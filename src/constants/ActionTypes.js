@@ -13,3 +13,8 @@ export const APP_ONLINE_GAME_END = "APP_ONLINE_GAME_END";
 export const GAME_RESET = "GAME_RESET";
 export const GAME_TURN_CHANGE = "GAME_TURN_CHANGE";
 export const GAME_SET_WINNER = "GAME_SET_WINNER";
+
+
+export const REQUEST_GAMES_LIST = "REQUEST_GAMES_LIST";
+/* export const FAILURE = "FAILURE"; */
+export const RECEIVE_GAMES_LIST = "RECEIVE_GAMES_LIST";

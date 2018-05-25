@@ -1,4 +1,3 @@
-import Constants from '../constants';
 import * as ActionTypes from '../constants/ActionTypes';
 
 const defaultState = () => {
@@ -7,7 +6,7 @@ const defaultState = () => {
         isOnline: false,
         isSecondPlayerReady: false
     };
-}
+};
 
 const game = (state = defaultState(), action) => {
     switch (action.type) {
@@ -22,7 +21,7 @@ const game = (state = defaultState(), action) => {
                 ...state,
                 isInGame: false,
                 isSecondPlayerReady: false
-            };       
+            };
         case ActionTypes.APP_ONLINE_GAME_START:
             return {
                 ...state,
@@ -36,7 +35,7 @@ const game = (state = defaultState(), action) => {
                 isInGame: false,
                 isOnline: false,
                 isSecondPlayerReady: false
-            };        
+            };
         default:
             return state;
     }

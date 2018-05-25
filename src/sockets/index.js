@@ -1,4 +1,4 @@
-import *  as types from '../constants/ActionTypes';
+import *  as ActionTypes from '../constants/ActionTypes';
 import { addUser, messageReceived, populateUsersList } from '../actions';
 
 

@@ -9,22 +9,12 @@ const app = express();
 const router = express.Router();
 const port = process.env.PORT || 8888;
 
-//return static page with websocket client
-// router.get('/',(req, res) => {
-//     res.send(express.static('../build'));
-// });
-// app.use('/', express.static('../build'));
-/* router.get('/test1',(req, res) => {
-    res.sendFile(path.join(__dirname, '../build'));
-}); */
-console.log(path.normalize(__dirname + '/../build'));
-app.use(express.static(path.normalize(__dirname + '/../build')));
-app.get('/test', (req, res) => {
-    res.json({test: "test"});
+app.use(express.static(path.resolve(__dirname + '/../build')));
+app.get('/games_list', (req, res) => {
+    res.json([{test:"test"}, {test:"test1"}]);
 });
 
 const indexPath = path.resolve(__dirname + '/../build/index.html');
-console.log(indexPath);
 app.get('*', (req, res) => {
     res.sendFile(indexPath);
 });
