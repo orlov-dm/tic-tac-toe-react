@@ -14,7 +14,9 @@ body {
   --square-secondary-color: lightyellow;
 
   --elements-size: 60px;
-  --spacing: 1vh;
+  --small-spacing: 1vh;
+  --spacing: 2vh;
+  --large-spacing: 4vh;
   --border-width: 1px;
   --settings-width: 300px;
 
