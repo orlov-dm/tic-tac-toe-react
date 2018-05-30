@@ -26,7 +26,7 @@ const getWaitingStatus = () => {
 }
 
 const getStatusBar = (props) => {
-    const { winner, values, turn, onRestart, onExit, isSecondPlayerReady } = props;    
+    const { winner, values, turn, isSecondPlayerReady } = props;    
     if(!isSecondPlayerReady) {
         return getWaitingStatus();
     }

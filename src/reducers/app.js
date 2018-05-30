@@ -6,7 +6,7 @@ const defaultState = () => {
         isOnline: false,
         isSecondPlayerReady: false
     };
-};
+}
 
 const game = (state = defaultState(), action) => {
     switch (action.type) {

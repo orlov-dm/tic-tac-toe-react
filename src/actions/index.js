@@ -55,7 +55,7 @@ const requestGamesList = () => ({ type: ActionTypes.REQUEST_GAMES_LIST });
 /* export const getGamesList = () => { type: 'FETCH_POSTS_FAILURE', error: 'Oops' } */;
 const receiveGamesList = (response) => ({ type: ActionTypes.RECEIVE_GAMES_LIST, response });
 
-export function fetchGamesList() {
+export const fetchGamesList = () => {
     return function (dispatch) {
         dispatch(requestGamesList());        
 
@@ -69,3 +69,8 @@ export function fetchGamesList() {
             )
     }
 }
+
+export const gamesListHoverRow = (row) => ({
+    type: ActionTypes.GAMES_LIST_HOVER_ROW,
+    row
+});

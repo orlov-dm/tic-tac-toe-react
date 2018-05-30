@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import * as Actions from '../actions';
 import App from '../App';
+import setupSocket from '../sockets';
 
 const mapStateToProps = state => ({
     isInGame: state.app.isInGame,
@@ -13,7 +14,8 @@ const mapDispatchToProps = dispatch => ({
     gameEnd: () => dispatch(Actions.gameEnd()),
     onlineGameStart: () => dispatch(Actions.onlineGameStart()),
     onlineGameEnd: () => dispatch(Actions.onlineGameEnd()),
-    getGamesList: () => dispatch(Actions.fetchGamesList())
+    getGamesList: () => dispatch(Actions.fetchGamesList()),
+    setupSocket: () => setupSocket(dispatch)
 });
 
 export default connect(

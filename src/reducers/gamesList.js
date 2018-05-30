@@ -1,6 +1,6 @@
 import * as ActionTypes from '../constants/ActionTypes';
 
-const gamesList = (state = { isFetching: false, items: [] }, action) => {
+const gamesList = (state = { isFetching: false, items: [], hoveredRow: null }, action) => {
     switch (action.type) {
         case ActionTypes.REQUEST_GAMES_LIST:
             return {
@@ -12,6 +12,11 @@ const gamesList = (state = { isFetching: false, items: [] }, action) => {
                 items: action.response,
                 isFetching: false
             };
+        case ActionTypes.GAMES_LIST_HOVER_ROW:
+            return {
+                ...state,
+                hoveredRow: action.row,                
+            }
         default:
             return state;
     }

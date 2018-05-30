@@ -6,7 +6,6 @@ import reducers from './reducers'
 import './index.css';
 import VisibleApp from './containers/VisibleApp';
 import registerServiceWorker from './registerServiceWorker';
-import setupSocket from './sockets';
 import thunkMiddleware from 'redux-thunk';
 import { createLogger } from 'redux-logger';
 

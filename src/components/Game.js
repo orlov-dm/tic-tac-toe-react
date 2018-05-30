@@ -12,7 +12,7 @@ import GameCore from '../core/Game';
 class Game extends Component {    
     constructor(props) {
         super(props);
-        const { settings, setupSocket } = props;
+        const { settings } = props;
 
         this.handleRestart = this.handleRestart.bind(this);
         this.handleSettingsClick = this.handleSettingsClick.bind(this);
@@ -28,9 +28,8 @@ class Game extends Component {
             this.ai.onMadeTurn = (index) => {
                 this.makeTurn(index.row, index.column);
             };    
-        } else {
-            this.socket = setupSocket();
         }
+        this.reinit();
     }
 
     reinit(fieldsCount = this.props.settings.fieldsCount) {
@@ -59,10 +58,7 @@ class Game extends Component {
                         values={boardValues}
                         turn={turn}
                         onRestart={this.handleRestart}
-                        onExit={() => {
-                            this.socket.close();
-                            onGameEnd();
-                        }}
+                        onExit={onGameEnd}
                         isSecondPlayerReady={isSecondPlayerReady}
                     />
                 </div>
@@ -104,10 +100,13 @@ class Game extends Component {
     }    
 
     handleSquareClick(row, column) {        
-        const { settings, game } = this.props;
+        const { settings, game, isSecondPlayerReady } = this.props;
         const { playWithAI, playAs } = settings;
         const { turn } = game;
         if (playWithAI && turn !== playAs) {
+            return false;
+        }
+        if (!isSecondPlayerReady) {
             return false;
         }
         this.makeTurn(row, column);

@@ -6,7 +6,6 @@ const Menu = (props) => {
         <div className="menu">
             <button onClick={onGameStart}>Start local game</button>
             <button onClick={onOnlineGameStart}>Create online game</button>
-            <button>List of online games</button>            
         </div>
     );
 };
