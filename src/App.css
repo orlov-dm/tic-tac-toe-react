@@ -71,39 +71,40 @@
   /* height: 20vh; */
   min-height: 20vh;
   max-height: 40vh;
-}
 
-.App > main .games-list > * {
   display: grid;
   grid-template-columns: 10% 1fr 1fr;
   overflow-y: scroll;
 }
 
-.App > main .games-list > .header {  
+/* .App > main .games-list > .header {  
   min-height: 40px;
-}
+} */
 
 /* .App > main .games-list > .body {    
 } */
 
-.App > main .games-list > * .cell {
+.App > main .games-list .cell {
   /* height: var(--large-spacing); */
   border: 1px solid var(--secondary-color);
   padding: var(--small-spacing);
 }
 
-.App > main .games-list > .header .cell {
+.App > main .games-list .header-cell.cell {
   font-weight: bold;  
-  text-align: center;
+  text-align: center;  
+  position: sticky;
+  top: 0;  
+  background-color: var(--primary-color);
 }
 
-.App > main .games-list > .body .cell {
+.App > main .games-list .body-cell.cell {
   background-color: white;/* var(--background-color); */
   border: 1px solid var(--secondary-color);
   /* color: var(--secondary-color); */
 }
 
-.App > main .games-list > .body .cell.hovered {
+.App > main .games-list .body-cell.cell.hovered {
   background-color: var(--background-color);
   
   /* color: var(--secondary-color); */
