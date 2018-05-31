@@ -29,5 +29,4 @@ function onlineGameStart({socket}, action) {
 export default function* rootSaga(params) {
     yield takeEvery(types.REQUEST_GAMES_LIST, getGamesList);
     yield takeEvery(types.APP_ONLINE_GAME_START, onlineGameStart, params);
-    yield takeEvery(types.INITIALIZE_BOARD, initializeBoard, params);
 }
