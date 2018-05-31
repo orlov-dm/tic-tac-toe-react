@@ -1,5 +1,5 @@
 import *  as ActionTypes from '../constants/ActionTypes';
-import { addUser, messageReceived, populateUsersList } from '../actions';
+import { gamesListAdd } from '../actions';
 
 
 const setupSocket = (dispatch, port = 8888) => {
@@ -14,24 +14,18 @@ const setupSocket = (dispatch, port = 8888) => {
         })) */
     };
 
-    socket.onmessage = (event) => {
-        /* const data = JSON.parse(event.data);
+    socket.onmessage = (event) => {  
+        console.log(event);
+        const data = JSON.parse(event.data);
         switch(data.type) {
-            case types.ADD_USER: {
-                dispatch(addUser(data.name));
-                break;
-            }
-            case types.ADD_MESSAGE: {
-                dispatch(messageReceived(data.message, data.author));
-                break;
-            }
-            case types.USERS_LIST: {
-                dispatch(populateUsersList(data.users));
+            case ActionTypes.APP_ONLINE_GAME_START: {
+                const { game } = data;
+                dispatch(gamesListAdd(game));
                 break;
             }
             default:
                 break;
-        } */
+        }
     }
     return socket;
 };

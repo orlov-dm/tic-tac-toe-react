@@ -52,25 +52,12 @@ export const onlineGameEnd = () => ({
 });
 
 export const requestGamesList = () => ({ type: ActionTypes.REQUEST_GAMES_LIST });
-/* export const getGamesList = () => { type: 'FETCH_POSTS_FAILURE', error: 'Oops' } */;
 export const receiveGamesList = (response) => ({ type: ActionTypes.RECEIVE_GAMES_LIST, response });
-
-/* export const fetchGamesList = () => {
-    return function (dispatch) {
-        dispatch(requestGamesList());        
-
-        return fetch(`/games_list`)
-            .then(
-                response => response.json(),                
-                error => console.log('An error occurred.', error)
-            )
-            .then(json =>
-                dispatch(receiveGamesList(json))
-            )
-    }
-} */
+export const failureGamesList = (error) => ({ type: ActionTypes.FAILURE_GAMES_LIST, error });
 
 export const gamesListHoverRow = (row) => ({
     type: ActionTypes.GAMES_LIST_HOVER_ROW,
     row
 });
+
+export const gamesListAdd = (game) => ({ type: ActionTypes.GAMES_LIST_ADD, game });

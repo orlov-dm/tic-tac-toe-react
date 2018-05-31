@@ -1,21 +1,36 @@
 import * as ActionTypes from '../constants/ActionTypes';
 
-const gamesList = (state = { isFetching: false, items: [], hoveredRow: null }, action) => {
+const gamesList = (state = { isFetching: false, items: [], fetchingError: null, hoveredRow: null }, action) => {
     switch (action.type) {
         case ActionTypes.REQUEST_GAMES_LIST:
             return {
                 ...state,
-                isFetching: true
+                isFetching: true,
+                fetchingError: null
             };
         case ActionTypes.RECEIVE_GAMES_LIST:
             return {
                 items: action.response,
                 isFetching: false
             };
+        case ActionTypes.FAILURE_GAMES_LIST:
+            return {
+                items: [],
+                isFetching: false,
+                fetchingError: action.error
+            };
         case ActionTypes.GAMES_LIST_HOVER_ROW:
             return {
                 ...state,
                 hoveredRow: action.row,                
+            }
+        case ActionTypes.GAMES_LIST_ADD:
+            return {
+                ...state,
+                items: [
+                    ...state.items,
+                    action.game
+                ]
             }
         default:
             return state;
