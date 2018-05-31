@@ -1,0 +1,22 @@
+module.exports.SET_SQUARE_VALUE = "SET_SQUARE_VALUE";
+module.exports.INITIALIZE_BOARD = "INITIALIZE_BOARD";
+
+module.exports.SAVE_SETTINGS = "SAVE_SETTINGS";
+module.exports.TOGGLE_SETTINGS = "TOGGLE_SETTINGS";
+
+module.exports.APP_GAME_START = "APP_GAME_START";
+module.exports.APP_GAME_END = "APP_GAME_END";
+module.exports.APP_ONLINE_GAME_START = "APP_ONLINE_GAME_START";
+module.exports.APP_ONLINE_GAME_END = "APP_ONLINE_GAME_END";
+
+
+module.exports.GAME_RESET = "GAME_RESET";
+module.exports.GAME_TURN_CHANGE = "GAME_TURN_CHANGE";
+module.exports.GAME_SET_WINNER = "GAME_SET_WINNER";
+
+
+module.exports.REQUEST_GAMES_LIST = "REQUEST_GAMES_LIST";
+module.exports.FAILURE_GAMES_LIST = "FAILURE_GAMES_LIST";
+module.exports.RECEIVE_GAMES_LIST = "RECEIVE_GAMES_LIST";
+
+module.exports.GAMES_LIST_HOVER_ROW = "GAMES_LIST_HOVER_ROW";
