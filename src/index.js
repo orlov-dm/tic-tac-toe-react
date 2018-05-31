@@ -9,20 +9,20 @@ import registerServiceWorker from './registerServiceWorker';
 import createSagaMiddleware from 'redux-saga';
 import { createLogger } from 'redux-logger';
 import rootSaga from './sagas';
+import setupSocket from './sockets';
 
 const loggerMiddleware = createLogger();
 const sagaMiddleware = createSagaMiddleware();
 
-const store = createStore(reducers, applyMiddleware(
-        // lets us dispatch() functions
-        /* thunkMiddleware, */ 
+const store = createStore(reducers, applyMiddleware(                
+        sagaMiddleware,
         // neat middleware that logs actions
-        loggerMiddleware,
-        sagaMiddleware        
+        loggerMiddleware
     )
 );
 
-sagaMiddleware.run(rootSaga);
+const socket = setupSocket(store.dispatch);
+sagaMiddleware.run(rootSaga, {socket});
 
 render(
     <Provider store={store}>

@@ -10,19 +10,9 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    props.getGamesList();
-  }
-
-  componentDidMount() {   
-      this.socket = this.props.setupSocket();
-  }
-
-  componentWillUnmount() {
-      if(this.socket.readyState === WebSocket.OPEN) {
-        this.socket.close();
-      }
     props.requestGamesList();
   }
+  
   render() {
     const { isInGame, isOnline, gamesList } = this.props;
     const onGameEnd = isOnline ? this.props.onlineGameEnd : this.props.gameEnd;
