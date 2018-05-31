@@ -1,5 +1,7 @@
 //https://www.kevinhooke.com/2017/04/02/serving-static-content-rest-endpoints-and-websockets-with-express-and-node-js/
 
+const generateTestData = require('./test_data');
+
 const express = require('express');
 const WebSocket = require('ws');
 const path = require('path');
@@ -9,9 +11,10 @@ const app = express();
 const router = express.Router();
 const port = process.env.PORT || 8888;
 
+const data = generateTestData();
 app.use(express.static(path.resolve(__dirname + '/../build')));
 app.get('/games_list', (req, res) => {
-    res.json([{test:"test"}, {test:"test1"}]);
+    res.json([...data]);
 });
 
 const indexPath = path.resolve(__dirname + '/../build/index.html');

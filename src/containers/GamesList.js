@@ -15,46 +15,52 @@ class GamesList extends Component {
     render() {                        
         return (
             <div className="games-list">
-                {this.renderHeader()}
-                {this.renderBody()}
+                {
+                    [
+                        ...this.renderHeader(),
+                        ...this.renderBody()
+                    ]
+                }
             </div>
         );
     }
 
     renderHeader() {
         const { header } = this;
-        return (
-            <div className="header">
-                {Object.keys(header).map(field => this.renderGameHeaderField(header, field))}
-            </div>
-        );
+        return Object.keys(header).map(field => this.renderGameHeaderField(header, field));
     }
 
     renderBody() {
         const { games, hoveredRow } = this.props;
         let index = 0;
-        return (
-            <div className="body">
-            {
-                games.map((game) => {
-                    const isHovered = hoveredRow !== null ? index === hoveredRow : false;
-                    const row = Object.keys(game).map(field => {
-                        return this.renderGameField(game, field, isHovered);
-                    });
-                    ++index;
-                    return row;
-                })
-            }
-            </div>
-        );
+        return games.map((game) => {
+            const isHovered = hoveredRow !== null ? index === hoveredRow : false;
+            const row = Object.keys(this.header).map(field => {
+                return this.renderGameField(game, field, isHovered);
+            });
+            ++index;
+            return row;
+        });        
     }
 
     renderGameHeaderField(header, field) {
         return (
             <div
                 key={`header-field-${field}`}
-                className={`field-${field} cell`}>
+                className={`field-${field} cell header-cell`}>
                 {header[field]}
+            </div>
+        );
+    }
+
+    renderGameField(game, field, isHovered) {
+        const className = `field-${field} cell body-cell` + (isHovered ? " hovered" : "");
+        return (
+            <div
+                key={`field-${field}-${game.id}`}
+                className={className}
+                onMouseOver={(event) => this.onCellMouseOver(event)}>
+                {game[field]}
             </div>
         );
     }
@@ -66,20 +72,8 @@ class GamesList extends Component {
         const { parentNode } = event.target;
         const index = Array.prototype.indexOf.call(parentNode.children, event.target);
         const indexesInRow = Object.keys(this.header).length;
-        const row = Math.floor(index / indexesInRow); 
+        const row = Math.floor(index / indexesInRow) - 1;  //-1 for header
         hoverRow(row);
-    }
-
-    renderGameField(game, field, isHovered) {
-        const className = `field-${field} cell` + (isHovered ? " hovered" : "");
-        return (
-            <div
-                key={`field-${field}-${game.id}`}
-                className={className}
-                onMouseOver={(event) => this.onCellMouseOver(event)}>
-                {game[field]}
-            </div>
-        );
     }
 };
 
