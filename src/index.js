@@ -6,7 +6,6 @@ import reducers from './reducers'
 import './index.css';
 import VisibleApp from './containers/VisibleApp';
 import registerServiceWorker from './registerServiceWorker';
-import thunkMiddleware from 'redux-thunk';
 import createSagaMiddleware from 'redux-saga';
 import { createLogger } from 'redux-logger';
 import rootSaga from './sagas';
