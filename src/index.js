@@ -7,15 +7,23 @@ import './index.css';
 import VisibleApp from './containers/VisibleApp';
 import registerServiceWorker from './registerServiceWorker';
 import thunkMiddleware from 'redux-thunk';
+import createSagaMiddleware from 'redux-saga';
 import { createLogger } from 'redux-logger';
+import rootSaga from './sagas';
 
 const loggerMiddleware = createLogger();
+const sagaMiddleware = createSagaMiddleware();
+
 const store = createStore(reducers, applyMiddleware(
-        thunkMiddleware, // lets us dispatch() functions
-        loggerMiddleware // neat middleware that logs actions
+        // lets us dispatch() functions
+        /* thunkMiddleware, */ 
+        // neat middleware that logs actions
+        loggerMiddleware,
+        sagaMiddleware        
     )
 );
 
+sagaMiddleware.run(rootSaga);
 
 render(
     <Provider store={store}>

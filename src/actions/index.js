@@ -51,11 +51,11 @@ export const onlineGameEnd = () => ({
     type: ActionTypes.APP_ONLINE_GAME_END
 });
 
-const requestGamesList = () => ({ type: ActionTypes.REQUEST_GAMES_LIST });
+export const requestGamesList = () => ({ type: ActionTypes.REQUEST_GAMES_LIST });
 /* export const getGamesList = () => { type: 'FETCH_POSTS_FAILURE', error: 'Oops' } */;
-const receiveGamesList = (response) => ({ type: ActionTypes.RECEIVE_GAMES_LIST, response });
+export const receiveGamesList = (response) => ({ type: ActionTypes.RECEIVE_GAMES_LIST, response });
 
-export const fetchGamesList = () => {
+/* export const fetchGamesList = () => {
     return function (dispatch) {
         dispatch(requestGamesList());        
 
@@ -68,7 +68,7 @@ export const fetchGamesList = () => {
                 dispatch(receiveGamesList(json))
             )
     }
-}
+} */
 
 export const gamesListHoverRow = (row) => ({
     type: ActionTypes.GAMES_LIST_HOVER_ROW,
