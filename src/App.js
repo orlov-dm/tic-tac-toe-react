@@ -21,6 +21,7 @@ class App extends Component {
       if(this.socket.readyState === WebSocket.OPEN) {
         this.socket.close();
       }
+    props.requestGamesList();
   }
   render() {
     const { isInGame, isOnline, gamesList } = this.props;
@@ -55,7 +56,7 @@ App.propTypes = {
   gameEnd: PropTypes.func.isRequired,
   onlineGameStart: PropTypes.func.isRequired,
   onlineGameEnd: PropTypes.func.isRequired,
-  getGamesList: PropTypes.func.isRequired  
+  requestGamesList: PropTypes.func.isRequired  
 }
 
 export default App;

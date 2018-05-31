@@ -14,8 +14,8 @@ const mapDispatchToProps = dispatch => ({
     gameEnd: () => dispatch(Actions.gameEnd()),
     onlineGameStart: () => dispatch(Actions.onlineGameStart()),
     onlineGameEnd: () => dispatch(Actions.onlineGameEnd()),
-    getGamesList: () => dispatch(Actions.requestGamesList()),
     setupSocket: () => setupSocket(dispatch)
+    requestGamesList: () => dispatch(Actions.requestGamesList())
 });
 
 export default connect(
