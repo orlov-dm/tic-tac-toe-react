@@ -7,9 +7,11 @@ class GamesList extends Component {
         super(props);
         this.header = {
             id: "ID",
-            name: "Name",
-            player: "Player"
+            /* name: "Name", */
+            author: "Author"
         };
+
+        this.rowToID = {};
     }
 
     render() {                        
@@ -33,11 +35,12 @@ class GamesList extends Component {
     renderBody() {
         const { games, hoveredRow } = this.props;
         let index = 0;
-        return games.map((game) => {
+        return Object.values(games).map((game) => {
             const isHovered = hoveredRow !== null ? index === hoveredRow : false;
             const row = Object.keys(this.header).map(field => {
                 return this.renderGameField(game, field, isHovered);
             });
+            this.rowToID[index] = game.id;
             ++index;
             return row;
         });        
@@ -59,7 +62,8 @@ class GamesList extends Component {
             <div
                 key={`field-${field}-${game.id}`}
                 className={className}
-                onMouseOver={(event) => this.onCellMouseOver(event)}>
+                onMouseOver={(event) => this.onCellMouseOver(event)}
+                onDoubleClick={(event) => this.onCellDoubleClick(event)}>
                 {game[field]}
             </div>
         );
@@ -69,11 +73,25 @@ class GamesList extends Component {
         const { hoverRow } = this.props;
 
         //get row index
-        const { parentNode } = event.target;
-        const index = Array.prototype.indexOf.call(parentNode.children, event.target);
-        const indexesInRow = Object.keys(this.header).length;
-        const row = Math.floor(index / indexesInRow) - 1;  //-1 for header
+        const row = this.getRowByCell(event.target);
         hoverRow(row);
+    }
+
+    onCellDoubleClick(event) {
+        const { games } = this.props;
+        const row = this.getRowByCell(event.target);
+        if(row === null || row >= Object.keys(games).length) {
+            return false;
+        }
+        const { onGameJoin } = this.props;
+        onGameJoin(this.rowToID[row]);
+    }
+
+    getRowByCell(cellNode) {
+        const { parentNode } = cellNode;
+        const index = Array.prototype.indexOf.call(parentNode.children, cellNode);
+        const indexesInRow = Object.keys(this.header).length;
+        return Math.floor(index / indexesInRow) - 1;  //-1 for header
     }
 };
 

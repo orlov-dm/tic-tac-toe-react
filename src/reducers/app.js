@@ -4,12 +4,21 @@ const defaultState = () => {
     return {
         isInGame: false,
         isOnline: false,
-        isSecondPlayerReady: false
+        isSecondPlayerReady: false,
+        player: null,
+        onlineGameID: null
     };
 }
 
-const game = (state = defaultState(), action) => {
+const app = (state = defaultState(), action) => {
     switch (action.type) {
+        case ActionTypes.APP_ONLINE_SET_PLAYER_INFO: {
+            const { player } = action;
+            return {
+                ...state,
+                player
+            };
+        }
         case ActionTypes.APP_GAME_START:
             return {
                 ...state,
@@ -28,17 +37,25 @@ const game = (state = defaultState(), action) => {
                 isInGame: true,
                 isOnline: true,
                 isSecondPlayerReady: false
-            };
+            };        
         case ActionTypes.APP_ONLINE_GAME_END:
             return {
                 ...state,
                 isInGame: false,
                 isOnline: false,
-                isSecondPlayerReady: false
+                isSecondPlayerReady: false,
+                onlineGameID: null
             };
+        case ActionTypes.APP_ONLINE_SET_GAME_ID: {
+                const { gameID } = action;
+                return {
+                    ...state,
+                    onlineGameID: gameID
+                };
+            }
         default:
             return state;
     }
 };
 
-export default game;
+export default app;

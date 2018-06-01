@@ -19,9 +19,15 @@ function* getGamesList() {
     }
 }
 
-function onlineGameStart({socket}, action) {
-    console.log("SAGA:");
-    console.log(...arguments);
+function onlineGameStart({socket}, action) { 
+    socket.send(JSON.stringify(action));
+}
+
+function onlineGameJoin({socket}, action) {    
+    socket.send(JSON.stringify(action));
+}
+
+function onlineGameEnd({socket}, action) {    
     socket.send(JSON.stringify(action));
 }
 
@@ -29,4 +35,6 @@ function onlineGameStart({socket}, action) {
 export default function* rootSaga(params) {
     yield takeEvery(types.REQUEST_GAMES_LIST, getGamesList);
     yield takeEvery(types.APP_ONLINE_GAME_START, onlineGameStart, params);
+    yield takeEvery(types.APP_ONLINE_GAME_JOIN, onlineGameJoin, params);
+    yield takeEvery(types.APP_ONLINE_GAME_END, onlineGameEnd, params);
 }

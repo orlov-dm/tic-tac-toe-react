@@ -47,9 +47,22 @@ export const onlineGameStart = () => ({
     type: ActionTypes.APP_ONLINE_GAME_START
 });
 
-export const onlineGameEnd = () => ({
-    type: ActionTypes.APP_ONLINE_GAME_END
+export const onlineGameJoin = (gameID) => ({
+    type: ActionTypes.APP_ONLINE_GAME_JOIN,
+    gameID
 });
+
+export const onlineGameEnd = (gameID) => ({
+    type: ActionTypes.APP_ONLINE_GAME_END,
+    gameID
+});
+
+export const onlineGameSetID = (gameID) => ({
+    type: ActionTypes.APP_ONLINE_SET_GAME_ID,
+    gameID
+});
+
+export const onlineGameSetPlayerInfo = (player) => ({ type: ActionTypes.APP_ONLINE_SET_PLAYER_INFO, player});
 
 export const requestGamesList = () => ({ type: ActionTypes.REQUEST_GAMES_LIST });
 export const receiveGamesList = (response) => ({ type: ActionTypes.RECEIVE_GAMES_LIST, response });
@@ -61,3 +74,4 @@ export const gamesListHoverRow = (row) => ({
 });
 
 export const gamesListAdd = (game) => ({ type: ActionTypes.GAMES_LIST_ADD, game });
+export const gamesListRemove = (gameID) => ({ type: ActionTypes.GAMES_LIST_REMOVE, gameID });

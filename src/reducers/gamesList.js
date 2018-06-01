@@ -1,6 +1,6 @@
 import * as ActionTypes from '../constants/ActionTypes';
 
-const gamesList = (state = { isFetching: false, items: [], fetchingError: null, hoveredRow: null }, action) => {
+const gamesList = (state = { isFetching: false, items: {}, fetchingError: null, hoveredRow: null }, action) => {
     switch (action.type) {
         case ActionTypes.REQUEST_GAMES_LIST:
             return {
@@ -15,7 +15,7 @@ const gamesList = (state = { isFetching: false, items: [], fetchingError: null, 
             };
         case ActionTypes.FAILURE_GAMES_LIST:
             return {
-                items: [],
+                items: {},
                 isFetching: false,
                 fetchingError: action.error
             };
@@ -27,11 +27,18 @@ const gamesList = (state = { isFetching: false, items: [], fetchingError: null, 
         case ActionTypes.GAMES_LIST_ADD:
             return {
                 ...state,
-                items: [
+                items: {
                     ...state.items,
-                    action.game
-                ]
+                    [action.game.id]: action.game
+                }
             }
+        case ActionTypes.GAMES_LIST_REMOVE:
+            let items = {...state.items};
+            delete items[action.gameID];
+            return {
+                ...state,
+                items
+            };
         default:
             return state;
     }

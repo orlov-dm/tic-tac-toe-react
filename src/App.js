@@ -12,24 +12,26 @@ class App extends Component {
 
     props.requestGamesList();
   }
-  
+
   render() {
     const { isInGame, isOnline, gamesList } = this.props;
-    const onGameEnd = isOnline ? this.props.onlineGameEnd : this.props.gameEnd;
-            
+    const onGameEnd = isOnline ? () => {
+      return this.props.onlineGameEnd(this.props.onlineGameID)
+    } : this.props.gameEnd;
+
     return (
       <div className="App">
         <header><div className="title">Tic-Tac-Toe</div></header>
         <main>
           {
             isInGame ?
-              <VisibleGame isOnline={isOnline} onGameEnd={onGameEnd} /> :              
-                [
-                  <Menu key={1} onGameStart={this.props.gameStart} onOnlineGameStart={this.props.onlineGameStart} />,
-                  <GamesList key={2} games={gamesList.isFetching ? [] : gamesList.items}/>
-                ]              
-          }              
-        </main>       
+              <VisibleGame isOnline={isOnline} onGameEnd={onGameEnd} /> :
+              [
+                <Menu key={1} onGameStart={this.props.gameStart} onOnlineGameStart={this.props.onlineGameStart} />,
+                <GamesList key={2} games={gamesList.isFetching ? [] : gamesList.items} onGameJoin={this.props.onlineGameJoin} />
+              ]
+          }
+        </main>
         <footer>
           Contact information: <a href="https://github.com/orlov-dm">D.E.Orlov</a>
         </footer>
@@ -45,8 +47,10 @@ App.propTypes = {
   gameStart: PropTypes.func.isRequired,
   gameEnd: PropTypes.func.isRequired,
   onlineGameStart: PropTypes.func.isRequired,
+  onlineGameJoin: PropTypes.func.isRequired,
   onlineGameEnd: PropTypes.func.isRequired,
-  requestGamesList: PropTypes.func.isRequired  
+  requestGamesList: PropTypes.func.isRequired,
+  onlineGameID: PropTypes.number
 }
 
 export default App;
