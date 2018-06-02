@@ -62,6 +62,11 @@ export const onlineGameSetID = (gameID) => ({
     gameID
 });
 
+export const onlineGameSetInfo = (game) => ({
+    type: ActionTypes.APP_ONLINE_SET_GAME_INFO,
+    game
+});
+
 export const onlineGameSetPlayerInfo = (player) => ({ type: ActionTypes.APP_ONLINE_SET_PLAYER_INFO, player});
 
 export const requestGamesList = () => ({ type: ActionTypes.REQUEST_GAMES_LIST });

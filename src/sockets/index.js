@@ -1,5 +1,5 @@
 import *  as ActionTypes from '../constants/ActionTypes';
-import { gamesListAdd, gamesListRemove, onlineGameSetPlayerInfo, onlineGameSetID } from '../actions';
+import { gamesListAdd, gamesListRemove, onlineGameSetPlayerInfo, onlineGameSetInfo } from '../actions';
 
 
 const setupSocket = (dispatch, port = 8888) => {
@@ -35,12 +35,13 @@ const setupSocket = (dispatch, port = 8888) => {
             }
             case ActionTypes.APP_ONLINE_GAME_RUNNING: {
                 const { gameID } = data;
+                //remove game from list to other players
                 dispatch(gamesListRemove(gameID));                
                 break;
-            }
-            case ActionTypes.APP_ONLINE_SET_GAME_ID: {
-                const { gameID } = data;
-                dispatch(onlineGameSetID(gameID));
+            }            
+            case ActionTypes.APP_ONLINE_SET_GAME_INFO: {
+                const { game } = data;
+                dispatch(onlineGameSetInfo(game));
                 break;
             }
             default:

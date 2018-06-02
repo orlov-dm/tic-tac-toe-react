@@ -4,9 +4,9 @@ import App from '../App';
 
 const mapStateToProps = state => ({
     isInGame: state.app.isInGame,
-    isOnline: state.app.isOnline,
     gamesList: state.gamesList,
-    onlineGameID: state.app.onlineGameID
+    onlineGameID: state.app.onlineGameID,
+    onlineOpponent: state.app.onlineOpponent
 });
 
 const mapDispatchToProps = dispatch => ({    

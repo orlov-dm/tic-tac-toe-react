@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import './App.css';
 import VisibleGame from './containers/VisibleGame';
 import Menu from './components/Menu';
-import GamesList from './containers/GamesList';
 
 class App extends Component {
   constructor(props) {
@@ -14,22 +13,27 @@ class App extends Component {
   }
 
   render() {
-    const { isInGame, isOnline, gamesList } = this.props;
+    const { isInGame, onlineGameID, onlineOpponent, gamesList } = this.props;
+    const isOnline = this.isOnline();
     const onGameEnd = isOnline ? () => {
-      return this.props.onlineGameEnd(this.props.onlineGameID)
+      return this.props.onlineGameEnd(onlineGameID)
     } : this.props.gameEnd;
 
     return (
       <div className="App">
-        <header><div className="title">Tic-Tac-Toe</div></header>
+        <header>
+          <div className="title">Tic-Tac-Toe</div>
+        </header>
         <main>
           {
             isInGame ?
-              <VisibleGame isOnline={isOnline} onGameEnd={onGameEnd} /> :
-              [
-                <Menu key={1} onGameStart={this.props.gameStart} onOnlineGameStart={this.props.onlineGameStart} />,
-                <GamesList key={2} games={gamesList.isFetching ? [] : gamesList.items} onGameJoin={this.props.onlineGameJoin} />
-              ]
+              <VisibleGame isOnline={isOnline} onlineOpponent={onlineOpponent} onGameEnd={onGameEnd}/> :              
+              <Menu
+                gamesList={gamesList}
+                onGameStart={this.props.gameStart}
+                onOnlineGameStart={this.props.onlineGameStart}
+                onOnlineGameJoin={this.props.onlineGameJoin}
+              />
           }
         </main>
         <footer>
@@ -38,11 +42,15 @@ class App extends Component {
       </div>
     );
   }
+
+  isOnline() {
+    const { isInGame, onlineGameID } = this.props;
+    return isInGame && onlineGameID != null;
+  }
 };
 
 App.propTypes = {
   isInGame: PropTypes.bool.isRequired,
-  isOnline: PropTypes.bool.isRequired,
   gamesList: PropTypes.object.isRequired,
   gameStart: PropTypes.func.isRequired,
   gameEnd: PropTypes.func.isRequired,

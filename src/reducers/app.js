@@ -3,10 +3,10 @@ import * as ActionTypes from '../constants/ActionTypes';
 const defaultState = () => {
     return {
         isInGame: false,
-        isOnline: false,
         isSecondPlayerReady: false,
-        player: null,
-        onlineGameID: null
+        player: null,        
+        onlineGameID: null,
+        onlineOpponent: null
     };
 }
 
@@ -34,25 +34,27 @@ const app = (state = defaultState(), action) => {
         case ActionTypes.APP_ONLINE_GAME_START:
             return {
                 ...state,
-                isInGame: true,
-                isOnline: true,
-                isSecondPlayerReady: false
+                isInGame: false,
+                isSecondPlayerReady: false,
+                onlineGameID: null //waiting for set_game_id event
             };        
         case ActionTypes.APP_ONLINE_GAME_END:
             return {
                 ...state,
                 isInGame: false,
-                isOnline: false,
                 isSecondPlayerReady: false,
                 onlineGameID: null
             };
-        case ActionTypes.APP_ONLINE_SET_GAME_ID: {
-                const { gameID } = action;
-                return {
-                    ...state,
-                    onlineGameID: gameID
-                };
-            }
+        case ActionTypes.APP_ONLINE_SET_GAME_INFO: {
+            const { game } = action;            
+            return {
+                ...state,
+                onlineGameID: game !== null ? game.id : null,
+                isInGame: game !== null,
+                onlineOpponent: game !== null ? game.player2 : null,
+                isSecondPlayerReady: game !== null && game.player2 !== null
+            };            
+        }
         default:
             return state;
     }

@@ -39,12 +39,15 @@ class Game extends Component {
     }
 
     render() {        
-        const { boardValues, settings, game, onGameEnd, isSecondPlayerReady } = this.props;
+        const { boardValues, settings, game, onGameEnd, isSecondPlayerReady, isOnline, onlineOpponent } = this.props;
         const { fieldsCount, winCount, settingsOpened } = settings;
-        const { winIndexes, winner, turn } = game;        
+        const { winIndexes, winner, turn } = game;
+
+        const onlineOpponentInfo = isOnline && onlineOpponent ? (<div>Opponent: {onlineOpponent.name}</div>) : "";
         return (
             <div className="game-wrapper">
                 <div className="game">
+                    {onlineOpponentInfo}
                     <Board
                         fieldsCount={fieldsCount}
                         winCount={winCount}

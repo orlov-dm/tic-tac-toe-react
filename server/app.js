@@ -78,52 +78,75 @@ wss.on('connection', (ws, request) => {
                 const game = {
                     id: gamesCounter++,
                     author: player.name,
-                    player1: player.id,
+                    player1: player,
                     player2: null
                 };
                 gamesMap.set(game.id, game);
+                //broadcast same event to all to update games list
                 broadcast({ ...data, game });
+                //send game info to p1
                 send({
-                    type: ActionTypes.APP_ONLINE_SET_GAME_ID,
-                    gameID: game.id
+                    type: ActionTypes.APP_ONLINE_SET_GAME_INFO,
+                    game
                 }, ws);
                 break;
             }
             case ActionTypes.APP_ONLINE_GAME_JOIN: {
                 console.log("APP_ONLINE_GAME_JOIN", data);
-                const gameID = { data };
+                const { gameID } = data;
                 const game = gamesMap.get(gameID);
                 //if null or busy
                 if(!game || game.player1 && game.player2) {
                     //todo error
+                    console.log(`Game ${gameID} is busy`);
                     break;
                 }                
                 gamesMap.set(gameID, {
                     ...game,
-                    player2: player.id
+                    player2: player
                 });
 
-                //todo broadcast online_game_end for other players
-                //and inform player1 and 2 that all is good
+                const resultGame = gamesMap.get(gameID);
                 broadcast({ 
                     type: ActionTypes.APP_ONLINE_GAME_RUNNING,
-                    game: gamesMap.get(gameID)
-                });                
-                send({
-                    type: ActionTypes.APP_ONLINE_SET_GAME_ID,
-                    gameID
-                }, ws);
+                    game: resultGame
+                });
+                //inform player that created game
+                const player1Client = playerClients.get(resultGame.player1.id);                
+                if(player1Client) {
+                    send({
+                        type: ActionTypes.APP_ONLINE_SET_GAME_INFO,
+                        game: resultGame
+                    }, player1Client);
+
+                    //inform player that tried to join                    
+                    send({
+                        //swap players for easier management
+                        //gui player is always first player and opponent is second
+                        type: ActionTypes.APP_ONLINE_SET_GAME_INFO,
+                        game: {
+                            ...resultGame,
+                            player1: resultGame.player2,
+                            player2: resultGame.player1
+                        }
+                    }, ws);
+                } else {
+                    //todo send error notification to player that tried to join
+                }                
                 break;
             }
             case ActionTypes.APP_ONLINE_GAME_END: {
                 console.log("APP_ONLINE_GAME_END", data);
                 const { gameID } = data;
                 const game = gamesMap.get(gameID);
-                const secondPlayerID = game.player1 === player.id ? game.player1 : game.player2;
-                send({
-                    type: ActionTypes.APP_ONLINE_SET_GAME_ID,
-                    gameID: null
-                }, playerClients.get(secondPlayerID));
+                const secondPlayerID = game.player1 === player.id ? game.player2 : game.player1;
+                const client = playerClients.get(secondPlayerID);
+                if(client) {
+                    send({
+                        type: ActionTypes.APP_ONLINE_SET_GAME_INFO,
+                        game: null
+                    }, client);
+                }   
                 gamesMap.delete(gameID);                
                 broadcast(data);
                 break;
@@ -132,6 +155,7 @@ wss.on('connection', (ws, request) => {
     });
 
     ws.on('close', () => {
+        console.log((new Date()) + ' Connection accepted.');
         players.delete(player.id);
         playerClients.delete(player.id);
         let gameIDsToDelete = [];
@@ -148,3 +172,6 @@ wss.on('connection', (ws, request) => {
 
 //Properly kill nodemon
 process.on('SIGINT', () => { console.log(" Stopping..."); process.exit(); });
+
+
+//https://github.com/websockets/ws#how-to-detect-and-close-broken-connections
