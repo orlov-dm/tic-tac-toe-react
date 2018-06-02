@@ -139,7 +139,7 @@ wss.on('connection', (ws, request) => {
                 console.log("APP_ONLINE_GAME_END", data);
                 const { gameID } = data;
                 const game = gamesMap.get(gameID);
-                const secondPlayerID = game.player1 === player.id ? game.player2 : game.player1;
+                const secondPlayerID = game.player1.id === player.id ? game.player2.id : game.player1.id;
                 const client = playerClients.get(secondPlayerID);
                 if(client) {
                     send({
