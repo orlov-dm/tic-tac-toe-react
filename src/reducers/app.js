@@ -2,8 +2,7 @@ import * as ActionTypes from '../constants/ActionTypes';
 
 const defaultState = () => {
     return {
-        isInGame: false,
-        isSecondPlayerReady: false,
+        isInGame: false,        
         player: null,        
         onlineGameID: null,
         onlineOpponent: null
@@ -22,27 +21,23 @@ const app = (state = defaultState(), action) => {
         case ActionTypes.APP_GAME_START:
             return {
                 ...state,
-                isInGame: true,
-                isSecondPlayerReady: true
+                isInGame: true                
             };
         case ActionTypes.APP_GAME_END:
             return {
                 ...state,
-                isInGame: false,
-                isSecondPlayerReady: false
+                isInGame: false                
             };
         case ActionTypes.APP_ONLINE_GAME_START:
             return {
                 ...state,
-                isInGame: false,
-                isSecondPlayerReady: false,
+                isInGame: false,                
                 onlineGameID: null //waiting for set_game_id event
             };        
         case ActionTypes.APP_ONLINE_GAME_END:
             return {
                 ...state,
-                isInGame: false,
-                isSecondPlayerReady: false,
+                isInGame: false,                
                 onlineGameID: null
             };
         case ActionTypes.APP_ONLINE_SET_GAME_INFO: {
@@ -51,8 +46,7 @@ const app = (state = defaultState(), action) => {
                 ...state,
                 onlineGameID: game !== null ? game.id : null,
                 isInGame: game !== null,
-                onlineOpponent: game !== null ? game.player2 : null,
-                isSecondPlayerReady: game !== null && game.player2 !== null
+                onlineOpponent: game !== null ? game.player2 : null
             };            
         }
         default:

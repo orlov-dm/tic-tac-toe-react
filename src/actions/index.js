@@ -16,6 +16,12 @@ export const saveSettings = (settings) => ({
     settings
 });
 
+export const setSettingsField = (field, value) => ({
+    type: ActionTypes.SET_SETTINGS_FIELD,
+    field,
+    value
+});
+
 export const toggleSettings = () => ({
     type: ActionTypes.TOGGLE_SETTINGS
 });
@@ -65,6 +71,17 @@ export const onlineGameSetID = (gameID) => ({
 export const onlineGameSetInfo = (game) => ({
     type: ActionTypes.APP_ONLINE_SET_GAME_INFO,
     game
+});
+
+export const onlineGameSetSquareValue = (index, value) => ({
+    type: ActionTypes.APP_ONLINE_SET_SQUARE_VALUE,
+    index,
+    value
+});
+
+export const onlineGameSetTurn = (turn) => ({
+    type: ActionTypes.APP_ONLINE_SET_GAME_TURN,    
+    turn
 });
 
 export const onlineGameSetPlayerInfo = (player) => ({ type: ActionTypes.APP_ONLINE_SET_PLAYER_INFO, player});

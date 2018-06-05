@@ -18,6 +18,11 @@ const settings = (state = defaultSettings(), action) => {
                 ...state,
                 ...action.settings
             };
+        case ActionTypes.SET_SETTINGS_FIELD:
+            return {
+                ...state,
+                [action.field]: action.value
+            };
         case ActionTypes.TOGGLE_SETTINGS:
             return {
                 ...state,

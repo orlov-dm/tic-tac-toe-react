@@ -5,8 +5,7 @@ import Game from '../components/Game';
 const mapStateToProps = state => ({
     boardValues: state.boardValues,
     settings: state.settings,
-    game: state.game,
-    isSecondPlayerReady: state.app.isSecondPlayerReady    
+    game: state.game        
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -1,4 +1,4 @@
-import { call, put, takeEvery } from 'redux-saga/effects';
+import { call, put, takeEvery, select } from 'redux-saga/effects';
 import * as types from '../constants/ActionTypes';
 import { receiveGamesList, failureGamesList } from '../actions';
 
@@ -27,8 +27,25 @@ function onlineGameJoin({socket}, action) {
     socket.send(JSON.stringify(action));
 }
 
-function onlineGameEnd({socket}, action) {    
+function onlineGameEnd({socket}, action) {
     socket.send(JSON.stringify(action));
+}
+
+const getOnlineGameID = (state) => state.app.onlineGameID;
+function* onlineGameTurnChange({socket}, action) {
+    const gameID = yield select(getOnlineGameID);
+    socket.send(JSON.stringify({
+        ...action,
+        gameID
+    }));
+}
+
+function* onlineGameSetSquareValue({socket}, action) {
+    const gameID = yield select(getOnlineGameID);
+    socket.send(JSON.stringify({
+        ...action,
+        gameID
+    }));
 }
 
 // use them in parallel
@@ -37,4 +54,6 @@ export default function* rootSaga(params) {
     yield takeEvery(types.APP_ONLINE_GAME_START, onlineGameStart, params);
     yield takeEvery(types.APP_ONLINE_GAME_JOIN, onlineGameJoin, params);
     yield takeEvery(types.APP_ONLINE_GAME_END, onlineGameEnd, params);
+    yield takeEvery(types.GAME_TURN_CHANGE, onlineGameTurnChange, params);
+    yield takeEvery(types.SET_SQUARE_VALUE, onlineGameSetSquareValue, params);
 }

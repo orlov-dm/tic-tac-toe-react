@@ -6,11 +6,16 @@ const path = require('path');
 
 const generateTestData = require('./test_data');
 const ActionTypes = require('./ActionTypes');
+const Core = require('./core');
 
 const app = express();
 //init Express Router
 const router = express.Router();
 const port = process.env.PORT || 8888;
+
+
+const X_ELEMENT = 1;
+const O_ELEMENT = -1;
 
 const test = false;
 /* const data = generateTestData(); */
@@ -21,7 +26,7 @@ let playerClients = new Map;
 if (test) {
     for (const game of generateTestData()) {
         gamesMap.set(game.id, game);
-    };
+    }
 }
 
 app.use(express.static(path.resolve(__dirname + '/../build')));
@@ -111,12 +116,21 @@ wss.on('connection', (ws, request) => {
                     type: ActionTypes.APP_ONLINE_GAME_RUNNING,
                     game: resultGame
                 });
+                //choose X or O for player1
+                //1 - X, 0 - O
+                const random = Core.getRandomInt(1);     
+                const turn = X_ELEMENT;
+                const playAs = random ? X_ELEMENT : O_ELEMENT;
                 //inform player that created game
                 const player1Client = playerClients.get(resultGame.player1.id);                
                 if(player1Client) {
                     send({
                         type: ActionTypes.APP_ONLINE_SET_GAME_INFO,
-                        game: resultGame
+                        game: {
+                            ...resultGame,
+                            turn,
+                            playAs
+                        }
                     }, player1Client);
 
                     //inform player that tried to join                    
@@ -127,7 +141,9 @@ wss.on('connection', (ws, request) => {
                         game: {
                             ...resultGame,
                             player1: resultGame.player2,
-                            player2: resultGame.player1
+                            player2: resultGame.player1,
+                            turn,
+                            playAs: -playAs
                         }
                     }, ws);
                 } else {
@@ -139,16 +155,52 @@ wss.on('connection', (ws, request) => {
                 console.log("APP_ONLINE_GAME_END", data);
                 const { gameID } = data;
                 const game = gamesMap.get(gameID);
+                if(!game) {
+                    console.error("Strange behaviour");
+                    break;
+                }
+                console.log(game);
+                if(game.player1 && game.player2) {
+                    const secondPlayerID = game.player1.id === player.id ? game.player2.id : game.player1.id;
+                    const client = playerClients.get(secondPlayerID);
+                    if(client) {
+                        send({
+                            type: ActionTypes.APP_ONLINE_SET_GAME_INFO,
+                            game: null
+                        }, client);
+                    }
+                }
+                gamesMap.delete(gameID);                
+                broadcast(data);
+                break;
+            }
+            case ActionTypes.GAME_TURN_CHANGE: {
+                console.log("GAME_TURN_CHANGE", data);
+                const { gameID, turn } = data;
+                const game = gamesMap.get(gameID);
                 const secondPlayerID = game.player1.id === player.id ? game.player2.id : game.player1.id;
                 const client = playerClients.get(secondPlayerID);
                 if(client) {
                     send({
-                        type: ActionTypes.APP_ONLINE_SET_GAME_INFO,
-                        game: null
+                        type: ActionTypes.GAME_TURN_CHANGE,
+                        turn
                     }, client);
                 }   
-                gamesMap.delete(gameID);                
-                broadcast(data);
+                break;
+            }
+            case ActionTypes.SET_SQUARE_VALUE: {
+                console.log("SET_SQUARE_VALUE", data);
+                const { gameID, index, value } = data;
+                const game = gamesMap.get(gameID);
+                const secondPlayerID = game.player1.id === player.id ? game.player2.id : game.player1.id;
+                const client = playerClients.get(secondPlayerID);
+                if(client) {
+                    send({
+                        type: ActionTypes.SET_SQUARE_VALUE,
+                        index,
+                        value
+                    }, client);
+                }   
                 break;
             }
         }
@@ -167,11 +219,11 @@ wss.on('connection', (ws, request) => {
         for(const gameID of gameIDsToDelete) {
             gamesMap.delete(gameID);
         }
-    })
+    });
 });
 
 //Properly kill nodemon
 process.on('SIGINT', () => { console.log(" Stopping..."); process.exit(); });
 
 
-//https://github.com/websockets/ws#how-to-detect-and-close-broken-connections
+/* https://github.com/websockets/ws#how-to-detect-and-close-broken-connections */

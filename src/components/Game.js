@@ -39,7 +39,7 @@ class Game extends Component {
     }
 
     render() {        
-        const { boardValues, settings, game, onGameEnd, isSecondPlayerReady, isOnline, onlineOpponent } = this.props;
+        const { boardValues, settings, game, onGameEnd, isOnline, onlineOpponent } = this.props;
         const { fieldsCount, winCount, settingsOpened } = settings;
         const { winIndexes, winner, turn } = game;
 
@@ -62,7 +62,7 @@ class Game extends Component {
                         turn={turn}
                         onRestart={this.handleRestart}
                         onExit={onGameEnd}
-                        isSecondPlayerReady={isSecondPlayerReady}
+                        isSecondPlayerReady={this.isSecondPlayerReady()}
                     />
                 </div>
                 <SettingsPanel
@@ -103,13 +103,13 @@ class Game extends Component {
     }    
 
     handleSquareClick(row, column) {        
-        const { settings, game, isSecondPlayerReady } = this.props;
+        const { settings, game } = this.props;
         const { playWithAI, playAs } = settings;
         const { turn } = game;
         if (playWithAI && turn !== playAs) {
             return false;
         }
-        if (!isSecondPlayerReady) {
+        if (!this.isSecondPlayerReady()) {
             return false;
         }
         this.makeTurn(row, column);
@@ -152,6 +152,11 @@ class Game extends Component {
                 this.ai.makeTurn();
             }, 500); //ms delay for smoother gameplay
         }
+    }
+
+    isSecondPlayerReady() {
+        const { isOnline, onlineOpponent } = this.props;
+        return isOnline ? onlineOpponent !== null : true;
     }
 }
 

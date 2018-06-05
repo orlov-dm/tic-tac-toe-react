@@ -18,12 +18,19 @@ const game = (state = defaultState(), action) => {
             return {
                 ...state,
                 turn: action.turn
-            };
+            };        
         case ActionTypes.GAME_SET_WINNER:
             return {
                 ...state,
                 winner: action.winner,
                 winIndexes: action.winIndexes
+            };
+
+        //from server
+        case ActionTypes.APP_ONLINE_SET_GAME_TURN:
+            return {
+                ...state,
+                turn: action.turn
             };
         default:
             return state;

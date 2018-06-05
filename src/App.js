@@ -13,7 +13,7 @@ class App extends Component {
   }
 
   render() {
-    const { isInGame, onlineGameID, onlineOpponent, gamesList } = this.props;
+    const { isInGame, onlineGameID, onlineOpponent, gamesList, onlineTurn } = this.props;
     const isOnline = this.isOnline();
     const onGameEnd = isOnline ? () => {
       return this.props.onlineGameEnd(onlineGameID)
@@ -27,7 +27,12 @@ class App extends Component {
         <main>
           {
             isInGame ?
-              <VisibleGame isOnline={isOnline} onlineOpponent={onlineOpponent} onGameEnd={onGameEnd}/> :              
+              <VisibleGame 
+                isOnline={isOnline}
+                onlineOpponent={onlineOpponent}
+                onGameEnd={onGameEnd}
+                turn={onlineTurn}
+              /> : 
               <Menu
                 gamesList={gamesList}
                 onGameStart={this.props.gameStart}
@@ -58,7 +63,8 @@ App.propTypes = {
   onlineGameJoin: PropTypes.func.isRequired,
   onlineGameEnd: PropTypes.func.isRequired,
   requestGamesList: PropTypes.func.isRequired,
-  onlineGameID: PropTypes.number
+  onlineGameID: PropTypes.number,
+  onlineTurn: PropTypes.number
 }
 
 export default App;

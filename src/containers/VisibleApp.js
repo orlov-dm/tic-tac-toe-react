@@ -6,7 +6,7 @@ const mapStateToProps = state => ({
     isInGame: state.app.isInGame,
     gamesList: state.gamesList,
     onlineGameID: state.app.onlineGameID,
-    onlineOpponent: state.app.onlineOpponent
+    onlineOpponent: state.app.onlineOpponent,
 });
 
 const mapDispatchToProps = dispatch => ({    

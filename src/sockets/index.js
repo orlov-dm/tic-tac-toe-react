@@ -1,5 +1,5 @@
 import *  as ActionTypes from '../constants/ActionTypes';
-import { gamesListAdd, gamesListRemove, onlineGameSetPlayerInfo, onlineGameSetInfo } from '../actions';
+import { gamesListAdd, gamesListRemove, onlineGameSetPlayerInfo, onlineGameSetInfo, setSettingsField, onlineGameSetTurn, onlineGameSetSquareValue } from '../actions';
 
 
 const setupSocket = (dispatch, port = 8888) => {
@@ -42,6 +42,26 @@ const setupSocket = (dispatch, port = 8888) => {
             case ActionTypes.APP_ONLINE_SET_GAME_INFO: {
                 const { game } = data;
                 dispatch(onlineGameSetInfo(game));
+                if(game) {
+                    if(game.hasOwnProperty('turn')) {
+                        const { turn } = game;
+                        dispatch(onlineGameSetTurn(turn));
+                    }
+                    if(game.hasOwnProperty('playAs')) {
+                        const { playAs } = game;
+                        dispatch(setSettingsField('playAs', playAs));
+                    }
+                }
+                break;
+            }
+            case ActionTypes.GAME_TURN_CHANGE: {
+                const { turn } = data;
+                dispatch(onlineGameSetTurn(turn));
+                break;
+            }
+            case ActionTypes.SET_SQUARE_VALUE: {
+                const { index, value } = data;
+                dispatch(onlineGameSetSquareValue(index, value));
                 break;
             }
             default:

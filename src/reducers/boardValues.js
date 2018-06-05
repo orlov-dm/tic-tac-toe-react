@@ -11,15 +11,23 @@ const getInitialBoard = (fieldsCount) => {
     return values;
 }
 
+const updateSquareValue = (state, index, value) => {
+    const values = cloneDeep(state);
+    values[index.row][index.column] = value;
+    return values;
+}
+
 const boardValues = (state = getInitialBoard(Constants.MIN_FIELD_SIZE), action) => {
     switch (action.type) {
         case ActionTypes.INITIALIZE_BOARD:
             return getInitialBoard(action.fieldsCount);        
         case ActionTypes.SET_SQUARE_VALUE: {
-            const values = cloneDeep(state);
-            values[action.index.row][action.index.column] = action.value;
-            return values;
+            return updateSquareValue(state, action.index, action.value);
         }
+
+        //from server
+        case ActionTypes.APP_ONLINE_SET_SQUARE_VALUE:
+            return updateSquareValue(state, action.index, action.value);
         default:
             return state;
     }
