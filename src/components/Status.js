@@ -14,11 +14,14 @@ const getDrawStatus = () => {
     return <div>{Constants.DRAW_ELEMENT_NAME}</div>;
 }
 
-const getNextTurnStatus = (turn) => {
-    return [
+const getNextTurnStatus = (turn, playAs) => {
+    const nextTurnStatus = [
         <div key={1}>Turn of</div>,
         <Square key={2} isWinner={false} value={turn} />
     ];
+    return playAs === turn ? 
+        [...nextTurnStatus, <p>(You)</p>] :
+        nextTurnStatus;
 }
 
 const getWaitingStatus = () => {
@@ -26,7 +29,7 @@ const getWaitingStatus = () => {
 }
 
 const getStatusBar = (props) => {
-    const { winner, values, turn, isSecondPlayerReady } = props;    
+    const { winner, values, turn, isSecondPlayerReady, playAs } = props;    
     if(!isSecondPlayerReady) {
         return getWaitingStatus();
     }
@@ -36,7 +39,7 @@ const getStatusBar = (props) => {
     if (isGameFinished(values)) {
         return getDrawStatus();
     } 
-    return getNextTurnStatus(turn);        
+    return getNextTurnStatus(turn, playAs);
 }
 
 
