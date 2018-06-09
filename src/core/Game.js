@@ -1,11 +1,12 @@
+let winCount = null;
 class Game {
   constructor(props) {
     const { winCount: value } = props;
-    this.winCount = value;
+    winCount = value;
   }
 
-  set winCount(value) {
-    this.winCount = value;
+  static set winCount(value) {
+    winCount = value;
   }
 
   static checkWinner(row, column, values, turn) {
@@ -28,9 +29,9 @@ class Game {
   }
 
   static checkWinnerDiagonal(i, j, values, turn) {
-    const leftToRight = Game.checkWinnerImpl(i, j, 1, 1, values, turn);
+    const leftToRight = this.checkWinnerImpl(i, j, 1, 1, values, turn);
     if (!leftToRight.length) {
-      const rightToLeft = Game.checkWinnerImpl(i, j, -1, 1, values, turn);
+      const rightToLeft = this.checkWinnerImpl(i, j, -1, 1, values, turn);
       if (rightToLeft.length) {
         return rightToLeft;
       }
@@ -41,7 +42,7 @@ class Game {
   static checkWinnerImpl(row, column, deltaRow, deltaColumn, values, turn) {
     const winIndexes = [{ row, column }];
     Game.DIRECTIONS.forEach((direction) => {
-      if (winIndexes.length >= this.winCount) {
+      if (winIndexes.length >= winCount) {
         return;
       }
       const current = { row, column };
