@@ -3,7 +3,7 @@ import Constants from '../constants';
 
 const Square = (props) => {
     let classNames = ["square"];
-    const {isWinner, value, onClick} = props;
+    const { isWinner, value, onClick } = props;
     const stringValue = Constants.getElementName(value);
 
     if (isWinner) {
@@ -13,6 +13,7 @@ const Square = (props) => {
         classNames.push(stringValue);
     }
     const content = value ? <span>{stringValue}</span> : "";
+
     return (
         <span className={classNames.join(" ")} onClick={onClick}>
             {content}

@@ -1,81 +1,77 @@
-let _winCount = null;
+class Game {
+  constructor(props) {
+    const { winCount: value } = props;
+    this.winCount = value;
+  }
 
-function _checkWinnerImpl(row, column, deltaRow, deltaColumn, values, turn) {
+  set winCount(value) {
+    this.winCount = value;
+  }
 
-    let winIndexes = [{ row, column }];
-    for (const direction of Game.DIRECTIONS) {
-        let current = { row, column };
-        let currentDeltaRow = deltaRow;
-        let currentDeltaColumn = deltaColumn;
-        if (direction === Game.DIR_BACKWARD) {
-            currentDeltaRow *= -1;
-            currentDeltaColumn *= -1
-        }
-
-        current.row += currentDeltaRow;
-        current.column += currentDeltaColumn;
-
-        while (
-            current.row >= 0 &&
-            current.column >= 0 &&
-            current.row < values.length &&
-            current.column < values.length &&
-            values[current.row][current.column] === turn
-        ) {
-            winIndexes.push({ ...current });
-            current.row += currentDeltaRow;
-            current.column += currentDeltaColumn;
-        }
-        if (winIndexes.length >= _winCount) {
-            return winIndexes;
-        }
+  static checkWinner(row, column, values, turn) {
+    let result = Game.checkWinnerHorizontal(row, column, values, turn);
+    if (!result.length) {
+      result = Game.checkWinnerVertical(row, column, values, turn);
     }
-    return [];
-}
+    if (!result.length) {
+      result = Game.checkWinnerDiagonal(row, column, values, turn);
+    }
+    return result;
+  }
 
-function _checkWinnerHorizontal(i, j, values, turn) {
-    return _checkWinnerImpl(i, j, 0, 1, values, turn);
-}
+  static checkWinnerHorizontal(i, j, values, turn) {
+    return Game.checkWinnerImpl(i, j, 0, 1, values, turn);
+  }
 
-function _checkWinnerVertical(i, j, values, turn) {
-    return _checkWinnerImpl(i, j, 1, 0, values, turn);
-}
+  static checkWinnerVertical(i, j, values, turn) {
+    return Game.checkWinnerImpl(i, j, 1, 0, values, turn);
+  }
 
-function _checkWinnerDiagonal(i, j, values, turn) {
-    const leftToRight = _checkWinnerImpl(i, j, 1, 1, values, turn);
+  static checkWinnerDiagonal(i, j, values, turn) {
+    const leftToRight = Game.checkWinnerImpl(i, j, 1, 1, values, turn);
     if (!leftToRight.length) {
-        const rightToLeft = _checkWinnerImpl(i, j, -1, 1, values, turn);
-        if (rightToLeft.length) {
-            return rightToLeft;
-        }
+      const rightToLeft = Game.checkWinnerImpl(i, j, -1, 1, values, turn);
+      if (rightToLeft.length) {
+        return rightToLeft;
+      }
     }
     return leftToRight;
+  }
+
+  static checkWinnerImpl(row, column, deltaRow, deltaColumn, values, turn) {
+    const winIndexes = [{ row, column }];
+    Game.DIRECTIONS.forEach((direction) => {
+      if (winIndexes.length >= this.winCount) {
+        return;
+      }
+      const current = { row, column };
+      let currentDeltaRow = deltaRow;
+      let currentDeltaColumn = deltaColumn;
+      if (direction === Game.DIR_BACKWARD) {
+        currentDeltaRow *= -1;
+        currentDeltaColumn *= -1;
+      }
+
+      current.row += currentDeltaRow;
+      current.column += currentDeltaColumn;
+
+      while (
+        current.row >= 0 &&
+        current.column >= 0 &&
+        current.row < values.length &&
+        current.column < values.length &&
+        values[current.row][current.column] === turn
+      ) {
+        winIndexes.push({ ...current });
+        current.row += currentDeltaRow;
+        current.column += currentDeltaColumn;
+      }
+    });
+    return winIndexes;
+  }
 }
-
-class Game {
-    static DIR_FORWARD = "forward";
-    static DIR_BACKWARD = "backward";  
-    static DIRECTIONS = [Game.DIR_FORWARD, Game.DIR_BACKWARD];
-
-    constructor(props) {
-        const { winCount: value } = props;
-        _winCount = value;
-    }
-
-    set winCount(value) {
-        _winCount = value;
-    }
-
-    checkWinner(row, column, values, turn) {
-        let result = _checkWinnerHorizontal(row, column, values, turn);
-        if (!result.length) {
-            result = _checkWinnerVertical(row, column, values, turn);
-        }
-        if (!result.length) {
-            result = _checkWinnerDiagonal(row, column, values, turn);
-        }
-        return result;
-    }   
-}
+Game.DIR_FORWARD = 'forward';
+Game.DIR_BACKWARD = 'backward';
+Game.DIRECTIONS = [Game.DIR_FORWARD, Game.DIR_BACKWARD];
 
 export default Game;
