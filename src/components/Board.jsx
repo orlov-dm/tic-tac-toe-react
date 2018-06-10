@@ -13,12 +13,8 @@ class Board extends Component {
     const { winIndexes, values, onClick } = this.props;
     let isWinner = false;
     if (winIndexes) {
-      for (const point of winIndexes) {
-        if (point.row === row && point.column === column) {
-          isWinner = true;
-          break;
-        }
-      }
+      isWinner = winIndexes.find(point =>
+        point.row === row && point.column === column) !== undefined;
     }
 
     const value = values[row][column] ? values[row][column] : ''/* row + "_" + column */;
@@ -50,14 +46,13 @@ class Board extends Component {
       </div>
     );
   }
-
 }
 
 Board.propTypes = {
   fieldsCount: PropTypes.number.isRequired,
-  winIndexes: PropTypes.array.isRequired,
-  values: PropTypes.array.isRequired,
+  winIndexes: PropTypes.arrayOf(PropTypes.object).isRequired,
+  values: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
   onClick: PropTypes.func.isRequired,
-}
+};
 
 export default Board;

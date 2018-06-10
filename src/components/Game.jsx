@@ -14,10 +14,6 @@ class Game extends Component {
     super(props);
     const { settings } = props;
 
-    this.handleRestart = this.handleRestart.bind(this);
-    this.handleSettingsClick = this.handleSettingsClick.bind(this);
-    this.handleSave = this.handleSave.bind(this);
-
     this.gameCore = new GameCore({
       winCount: settings.winCount,
     });
@@ -97,8 +93,13 @@ class Game extends Component {
   }
 
   makeTurn(row, column) {
-    const { game, boardValues,
-      setSquareValue, gameTurnChange, gameSetWinner } = this.props;
+    const {
+      game,
+      boardValues,
+      setSquareValue,
+      gameTurnChange,
+      gameSetWinner,
+    } = this.props;
     const { turn, winner } = game;
     if (winner || boardValues[row][column]) {
       return;
@@ -127,8 +128,8 @@ class Game extends Component {
     } = settings;
     const { winIndexes, winner, turn } = game;
 
-    const onlineOpponentInfo = isOnline && onlineOpponent ? (<div>Opponent: {onlineOpponent.name}</div>) : "";
-    const playAsInfo = isOnline ? (<div>PlayAs: {playAs}</div>) : "";
+    const onlineOpponentInfo = isOnline && onlineOpponent ? (<div>Opponent: {onlineOpponent.name}</div>) : '';
+    const playAsInfo = isOnline ? (<div>PlayAs: {playAs}</div>) : '';
     return (
       <div className="game-wrapper">
         <div className="game">
@@ -146,7 +147,7 @@ class Game extends Component {
             winner={winner}
             values={boardValues}
             turn={turn}
-            onRestart={this.handleRestart}
+            onRestart={() => this.handleRestart()}
             onExit={onGameEnd}
             isSecondPlayerReady={this.isSecondPlayerReady()}
             playAs={playAs}
@@ -154,12 +155,12 @@ class Game extends Component {
         </div>
         <SettingsPanel
           isOpened={settingsOpened}
-          onSave={this.handleSave}
+          onSave={() => this.handleSave()}
           {...settings}
         />
         <SettingsButton
           isOpened={settingsOpened}
-          onClick={this.handleSettingsClick}
+          onClick={() => this.handleSettingsClick()}
         />
       </div>
     );
@@ -169,13 +170,27 @@ class Game extends Component {
 Game.propTypes = {
   initializeBoard: PropTypes.func.isRequired,
   setSquareValue: PropTypes.func.isRequired,
-  boardValues: PropTypes.array.isRequired,
-  settings: PropTypes.object.isRequired,
+  isOnline: PropTypes.bool.isRequired,
+  settings: PropTypes.shape({
+    fieldsCount: PropTypes.number,
+    winCount: PropTypes.number,
+    playWithAI: PropTypes.bool,
+    playAs: PropTypes.number,
+  }).isRequired,
   saveSettings: PropTypes.func.isRequired,
   toggleSettings: PropTypes.func.isRequired,
   gameReset: PropTypes.func.isRequired,
   gameTurnChange: PropTypes.func.isRequired,
   gameSetWinner: PropTypes.func.isRequired,
-}
+  onGameEnd: PropTypes.func.isRequired,
+  game: PropTypes.shape({
+    turn: PropTypes.number,
+    winner: PropTypes.number,
+    winIndexes: PropTypes.array,
+    isOnline: PropTypes.bool,
+  }).isRequired,
+  onlineOpponent: PropTypes.number.isRequired,
+  boardValues: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
+};
 
 export default Game;

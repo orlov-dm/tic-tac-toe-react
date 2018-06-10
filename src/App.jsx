@@ -12,13 +12,17 @@ class App extends Component {
     props.requestGamesList();
   }
 
-  render() {
-    const { isInGame, onlineGameID, onlineOpponent, gamesList, onlineTurn } = this.props;
-    const isOnline = this.isOnline();
-    const onGameEnd = isOnline ? () => {
-      return this.props.onlineGameEnd(onlineGameID)
-    } : this.props.gameEnd;
+  isOnline() {
+    const { isInGame, onlineGameID } = this.props;
+    return isInGame && onlineGameID != null;
+  }
 
+  render() {
+    const {
+      isInGame, onlineGameID, onlineOpponent, onlineTurn,
+    } = this.props;
+    const isOnline = this.isOnline();
+    const onGameEnd = isOnline ? () => this.props.onlineGameEnd(onlineGameID) : this.props.gameEnd;
     return (
       <div className="App">
         <header>
@@ -27,14 +31,13 @@ class App extends Component {
         <main>
           {
             isInGame ?
-              <VisibleGame 
+              <VisibleGame
                 isOnline={isOnline}
                 onlineOpponent={onlineOpponent}
                 onGameEnd={onGameEnd}
                 turn={onlineTurn}
-              /> : 
+              /> :
               <Menu
-                gamesList={gamesList}
                 onGameStart={this.props.gameStart}
                 onOnlineGameStart={this.props.onlineGameStart}
                 onOnlineGameJoin={this.props.onlineGameJoin}
@@ -47,16 +50,10 @@ class App extends Component {
       </div>
     );
   }
-
-  isOnline() {
-    const { isInGame, onlineGameID } = this.props;
-    return isInGame && onlineGameID != null;
-  }
-};
+}
 
 App.propTypes = {
   isInGame: PropTypes.bool.isRequired,
-  gamesList: PropTypes.object.isRequired,
   gameStart: PropTypes.func.isRequired,
   gameEnd: PropTypes.func.isRequired,
   onlineGameStart: PropTypes.func.isRequired,
@@ -64,7 +61,14 @@ App.propTypes = {
   onlineGameEnd: PropTypes.func.isRequired,
   requestGamesList: PropTypes.func.isRequired,
   onlineGameID: PropTypes.number,
-  onlineTurn: PropTypes.number
-}
+  onlineTurn: PropTypes.number,
+  onlineOpponent: PropTypes.number,
+};
+
+App.defaultProps = {
+  onlineGameID: null,
+  onlineTurn: null,
+  onlineOpponent: null,
+};
 
 export default App;

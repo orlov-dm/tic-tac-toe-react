@@ -1,14 +1,12 @@
 import Constants from '../constants';
 import * as ActionTypes from '../constants/ActionTypes';
 
-const defaultState = () => {
-  return {
-    turn: Constants.X_ELEMENT,
-    winner: null,
-    winIndexes: null,
-    isOnline: false,
-  };
-};
+const defaultState = () => ({
+  turn: Constants.X_ELEMENT,
+  winner: null,
+  winIndexes: null,
+  isOnline: false,
+});
 
 const game = (state = defaultState(), action) => {
   switch (action.type) {
