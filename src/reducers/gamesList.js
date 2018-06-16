@@ -37,13 +37,14 @@ const gamesList = (state = {
           [action.game.id]: action.game,
         },
       };
-    case ActionTypes.GAMES_LIST_REMOVE:
-      let items = { ...state.items };
+    case ActionTypes.GAMES_LIST_REMOVE: {
+      const items = { ...state.items };
       delete items[action.gameID];
       return {
         ...state,
         items,
       };
+    }
     default:
       return state;
   }

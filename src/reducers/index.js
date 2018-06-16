@@ -6,9 +6,9 @@ import game from './game';
 import gamesList from './gamesList';
 
 export default combineReducers({
-    app,    
-    boardValues,
-    settings,
-    game,
-    gamesList
+  app,
+  boardValues,
+  settings,
+  game,
+  gamesList,
 });

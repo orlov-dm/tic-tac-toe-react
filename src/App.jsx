@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import './App.css';
 import VisibleGame from './containers/VisibleGame';
-import Menu from './components/Menu';
+import Menu from './containers/Menu';
 
 class App extends Component {
   constructor(props) {

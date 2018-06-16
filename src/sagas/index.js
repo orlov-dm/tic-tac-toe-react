@@ -6,7 +6,7 @@ const fetchGamesList = () => {
   const gamesListURI = '/games_list';
   return fetch(gamesListURI).then(
     response => response.json(),
-    error => console.log('An error occurred.', error)
+    error => console.error('An error occurred.', error),
   );
 };
 

@@ -19,9 +19,9 @@ class Game extends Component {
     });
 
     if (!props.isOnline) {
-      this.ai = new AI(this.gameCore);
-      this.ai.player = Constants.O_ELEMENT;
-      this.ai.onMadeTurn = (index) => {
+      AI.gameCore = this.gameCore;
+      AI.player = Constants.O_ELEMENT;
+      AI.onMadeTurn = (index) => {
         this.makeTurn(index.row, index.column);
       };
     }
@@ -44,8 +44,8 @@ class Game extends Component {
     ) {
       const { boardValues } = this.props;
       setTimeout(() => {
-        this.ai.board = boardValues;
-        this.ai.makeTurn();
+        AI.board = boardValues;
+        AI.makeTurn();
       }, 500); // ms delay for smoother gameplay
     }
   }
@@ -53,7 +53,7 @@ class Game extends Component {
   handleSave(settings) {
     const { saveSettings } = this.props;
     if (settings.playWithAI) {
-      this.ai.player = -settings.playAs;
+      AI.player = -settings.playAs;
     }
 
     this.gameCore.winCount = settings.winCount;

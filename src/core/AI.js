@@ -13,7 +13,7 @@ let _gameCore = null;
 let _onMadeTurn = null;
 
 function _getEmptyIndexesFromBoard() {
-  let result = [];
+  const result = [];
   _board.forEach((row, i) => {
     row.forEach((value, j) => {
       if (value) {
@@ -27,8 +27,8 @@ function _getEmptyIndexesFromBoard() {
 
 function _checkWinnerBoard(board, color) {
   const turn = color === 1 ? _player : _humanPlayer;
-  for (let i = 0; i < board.length; ++i) {
-    for (let j = 0; j < board[i].length; ++j) {
+  for (let i = 0; i < board.length; i += 1) {
+    for (let j = 0; j < board[i].length; j += 1) {
       if (board[i][j] === turn) {
         const winIndexes = _gameCore.checkWinner(i, j, board, turn);
         if (winIndexes.length) {
@@ -38,38 +38,6 @@ function _checkWinnerBoard(board, color) {
     }
   }
   return false;
-}
-
-//implementation of https://en.wikipedia.org/wiki/Negamax#Negamax_with_alpha_beta_pruning
-function _negamax(node, depth, alpha, beta, color) {
-  const emptyIndexes = _getEmptyIndexesFromBoard(node);
-  const terminateStateScore = _score(node, depth, color, emptyIndexes);
-  if (terminateStateScore !== null) {
-    return terminateStateScore;
-  }
-  let best = -Infinity;
-  for (const index of emptyIndexes) {
-    // set the empty spot to the current player
-    node[index.row][index.column] = color === 1 ? _player : _humanPlayer;
-    let value = -_negamax(node, depth - 1, -beta, -alpha, -color);
-    node[index.row][index.column] = null;
-    if (depth === _DEPTH && value > best) {
-      _resultIndex = index;
-    }
-    if (_DEBUG && depth === _DEPTH) {
-      _allIndexes.push({
-        index,
-        value
-      });
-    }
-    best = Math.max(best, value);
-    alpha = Math.max(alpha, value);
-    if (alpha >= beta) {
-      break;
-    }
-  }
-
-  return best;
 }
 
 function _score(node, depth, color, emptyIndexes) {
@@ -85,33 +53,67 @@ function _score(node, depth, color, emptyIndexes) {
   return null;
 }
 
+
+// implementation of https://en.wikipedia.org/wiki/Negamax#Negamax_with_alpha_beta_pruning
+function _negamax(node, depth, alpha, beta, color) {
+  const emptyIndexes = _getEmptyIndexesFromBoard(node);
+  const terminateStateScore = _score(node, depth, color, emptyIndexes);
+  if (terminateStateScore !== null) {
+    return terminateStateScore;
+  }
+  let best = -Infinity;
+  for (let i = 0; i < emptyIndexes.length; i += 1) {
+    const index = emptyIndexes[i];
+    // set the empty spot to the current player
+    node[index.row][index.column] = color === 1 ? _player : _humanPlayer;
+    const value = -_negamax(node, depth - 1, -beta, -alpha, -color);
+    node[index.row][index.column] = null;
+    if (depth === _DEPTH && value > best) {
+      _resultIndex = index;
+    }
+    if (_DEBUG && depth === _DEPTH) {
+      _allIndexes.push({
+        index,
+        value,
+      });
+    }
+    best = Math.max(best, value);
+    alpha = Math.max(alpha, value);
+    if (alpha >= beta) {
+      break;
+    }
+  }
+
+  return best;
+}
+
 class AI {
-  constructor(gameCore) {
-    _gameCore = gameCore;
+  static set gameCore(gC) {
+    _gameCore = gC;
 
     if (_DEBUG) {
       _allIndexes = [];
     }
   }
 
-  set board(b) {
+  static set board(b) {
     _board = cloneDeep(b);
   }
 
-  set player(p) {
+  static set player(p) {
     _player = p;
     _humanPlayer = -p;
   }
 
-  get player() {
+  static get player() {
     return _player;
   }
 
-  set onMadeTurn(callback) {
+  static set onMadeTurn(callback) {
     _onMadeTurn = callback;
   }
 
-  makeTurn() {
+  static makeTurn() {
     if (!_onMadeTurn) {
       return;
     }

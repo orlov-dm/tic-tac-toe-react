@@ -15,7 +15,7 @@ const mapDispatchToProps = dispatch => ({
   onlineGameStart: () => dispatch(Actions.onlineGameStart()),
   onlineGameJoin: gameID => dispatch(Actions.onlineGameJoin(gameID)),
   onlineGameEnd: gameID => dispatch(Actions.onlineGameEnd(gameID)),
-  requestGamesList: () => dispatch(Actions.requestGamesList())
+  requestGamesList: () => dispatch(Actions.requestGamesList()),
 });
 
 export default connect(
