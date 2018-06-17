@@ -30,9 +30,15 @@ const Square = (props) => {
 };
 
 Square.propTypes = {
-  isWinner: PropTypes.bool.isRequired,
-  value: PropTypes.number.isRequired,
-  onClick: PropTypes.func.isRequired,
+  isWinner: PropTypes.bool,
+  value: PropTypes.number,
+  onClick: PropTypes.func,
+};
+
+Square.defaultProps = {
+  isWinner: null,
+  value: null,
+  onClick: null,
 };
 
 export default Square;

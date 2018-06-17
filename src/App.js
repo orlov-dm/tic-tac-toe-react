@@ -62,7 +62,10 @@ App.propTypes = {
   requestGamesList: PropTypes.func.isRequired,
   onlineGameID: PropTypes.number,
   onlineTurn: PropTypes.number,
-  onlineOpponent: PropTypes.number,
+  onlineOpponent: PropTypes.shape({
+    id: PropTypes.number,
+    name: PropTypes.string,
+  }),
 };
 
 App.defaultProps = {

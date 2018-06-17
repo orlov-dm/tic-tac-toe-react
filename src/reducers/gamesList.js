@@ -2,7 +2,7 @@ import * as ActionTypes from '../constants/ActionTypes';
 
 const gamesList = (state = {
   isFetching: false,
-  items: {},
+  items: [],
   fetchingError: null,
   hoveredRow: null,
 }, action) => {
@@ -20,7 +20,7 @@ const gamesList = (state = {
       };
     case ActionTypes.FAILURE_GAMES_LIST:
       return {
-        items: {},
+        items: [],
         isFetching: false,
         fetchingError: action.error,
       };
@@ -32,14 +32,13 @@ const gamesList = (state = {
     case ActionTypes.GAMES_LIST_ADD:
       return {
         ...state,
-        items: {
+        items: [
           ...state.items,
-          [action.game.id]: action.game,
-        },
+          action.game,
+        ],
       };
     case ActionTypes.GAMES_LIST_REMOVE: {
-      const items = { ...state.items };
-      delete items[action.gameID];
+      const items = state.items.filter(game => game.id !== action.gameID);
       return {
         ...state,
         items,

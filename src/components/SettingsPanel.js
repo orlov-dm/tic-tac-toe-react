@@ -55,7 +55,7 @@ class SettingsPanel extends Component {
       settings.winCount = settings.fieldsCount;
     }
 
-    if (settings.playWithAI && !this.canAllowAI(settings.fieldsCount)) {
+    if (settings.playWithAI && !SettingsPanel.canAllowAI(settings.fieldsCount)) {
       settings.playWithAI = false;
     }
 

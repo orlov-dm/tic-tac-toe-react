@@ -14,12 +14,8 @@ class Game extends Component {
     super(props);
     const { settings } = props;
 
-    this.gameCore = new GameCore({
-      winCount: settings.winCount,
-    });
-
+    GameCore.winCount = settings.winCount;
     if (!props.isOnline) {
-      AI.gameCore = this.gameCore;
       AI.player = Constants.O_ELEMENT;
       AI.onMadeTurn = (index) => {
         this.makeTurn(index.row, index.column);
@@ -56,7 +52,7 @@ class Game extends Component {
       AI.player = -settings.playAs;
     }
 
-    this.gameCore.winCount = settings.winCount;
+    GameCore.winCount = settings.winCount;
     saveSettings({
       ...settings,
       settingsOpened: false,
@@ -106,7 +102,7 @@ class Game extends Component {
     }
     setSquareValue({ row, column }, turn);
 
-    const winIndexes = this.gameCore.checkWinner(row, column, boardValues, turn);
+    const winIndexes = GameCore.checkWinner(row, column, boardValues, turn);
     if (winIndexes.length) {
       gameSetWinner(turn, winIndexes);
     }
@@ -189,8 +185,12 @@ Game.propTypes = {
     winIndexes: PropTypes.array,
     isOnline: PropTypes.bool,
   }).isRequired,
-  onlineOpponent: PropTypes.number.isRequired,
+  onlineOpponent: PropTypes.number,
   boardValues: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
+};
+
+Game.defaultProps = {
+  onlineOpponent: null,
 };
 
 export default Game;

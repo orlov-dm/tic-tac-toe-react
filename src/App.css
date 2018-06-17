@@ -168,7 +168,7 @@
   }
   to {
     opacity: 1;
-    transform: scale(1);
+    transform: scale(1);    
   }
 }
 .board .square {
@@ -178,7 +178,8 @@
   background-color: var(--square-background-color);
   display: flex;
   align-items: center;
-  justify-content: center;     
+  justify-content: center;
+  outline: 0;
 }
 
 .square > * {

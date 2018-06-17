@@ -17,7 +17,7 @@ class Board extends Component {
         point.row === row && point.column === column) !== undefined;
     }
 
-    const value = values[row][column] ? values[row][column] : ''/* row + "_" + column */;
+    const value = values[row][column] ? values[row][column] : null;
     const key = `${row}_${column}_square`;
 
     return (
@@ -50,9 +50,13 @@ class Board extends Component {
 
 Board.propTypes = {
   fieldsCount: PropTypes.number.isRequired,
-  winIndexes: PropTypes.arrayOf(PropTypes.object).isRequired,
+  winIndexes: PropTypes.arrayOf(PropTypes.object),
   values: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
   onClick: PropTypes.func.isRequired,
+};
+
+Board.defaultProps = {
+  winIndexes: null,
 };
 
 export default Board;

@@ -68,7 +68,10 @@ class Game {
         current.column += currentDeltaColumn;
       }
     });
-    return winIndexes;
+    if (winIndexes.length >= winCount) {
+      return winIndexes;
+    }
+    return [];
   }
 }
 Game.DIR_FORWARD = 'forward';

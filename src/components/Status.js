@@ -17,7 +17,7 @@ const getNextTurnStatus = (turn, playAs) => {
     <Square key={2} isWinner={false} value={turn} />,
   ];
   return playAs === turn ?
-    [...nextTurnStatus, <p>(You)</p>] :
+    [...nextTurnStatus, <p key={3}>(You)</p>] :
     nextTurnStatus;
 };
 
@@ -87,13 +87,17 @@ const Status = (props) => {
 };
 
 Status.propTypes = {
-  winner: PropTypes.number.isRequired,
+  winner: PropTypes.number,
   values: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
   isSecondPlayerReady: PropTypes.bool.isRequired,
   playAs: PropTypes.number.isRequired,
   turn: PropTypes.number.isRequired,
   onRestart: PropTypes.func.isRequired,
   onExit: PropTypes.func.isRequired,
+};
+
+Status.defaultProps = {
+  winner: null,
 };
 
 export default Status;

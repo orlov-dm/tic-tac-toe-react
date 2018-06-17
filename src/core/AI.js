@@ -1,4 +1,5 @@
 import { cloneDeep } from '../core';
+import GameCore from '../core/Game';
 
 const _SCORE = 10;
 const _DEPTH = 7;
@@ -9,7 +10,6 @@ let _player = null;
 let _humanPlayer = null;
 let _allIndexes = null;
 let _resultIndex = null;
-let _gameCore = null;
 let _onMadeTurn = null;
 
 function _getEmptyIndexesFromBoard() {
@@ -30,7 +30,7 @@ function _checkWinnerBoard(board, color) {
   for (let i = 0; i < board.length; i += 1) {
     for (let j = 0; j < board[i].length; j += 1) {
       if (board[i][j] === turn) {
-        const winIndexes = _gameCore.checkWinner(i, j, board, turn);
+        const winIndexes = GameCore.checkWinner(i, j, board, turn);
         if (winIndexes.length) {
           return true;
         }
@@ -87,15 +87,11 @@ function _negamax(node, depth, alpha, beta, color) {
   return best;
 }
 
+if (_DEBUG) {
+  _allIndexes = [];
+}
+
 class AI {
-  static set gameCore(gC) {
-    _gameCore = gC;
-
-    if (_DEBUG) {
-      _allIndexes = [];
-    }
-  }
-
   static set board(b) {
     _board = cloneDeep(b);
   }

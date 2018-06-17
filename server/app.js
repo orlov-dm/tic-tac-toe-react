@@ -18,7 +18,7 @@ const O_ELEMENT = -1;
 const test = false;
 /* const data = generateTestData(); */
 let gamesCounter = 0;
-let gamesMap = new Map();
+const gamesMap = new Map();
 const players = new Map();
 const playerClients = new Map();
 if (test) {
@@ -211,7 +211,13 @@ wss.on('connection', (ws /* , request */) => {
     console.log(`${new Date()} Connection accepted.`);
     players.delete(player.id);
     playerClients.delete(player.id);
-    gamesMap = gamesMap.filter(game => !(game.player1 === player.id || game.player2 === player.id));
+    const idsToDelete = [];
+    gamesMap.forEach((game, key) => {
+      if (!(game.player1 === player.id || game.player2 === player.id)) {
+        idsToDelete.push(key);
+      }
+    });
+    idsToDelete.forEach(id => gamesMap.delete(id));
   });
 });
 
