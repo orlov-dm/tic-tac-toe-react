@@ -1,4 +1,4 @@
-//https://www.kevinhooke.com/2017/04/02/serving-static-content-rest-endpoints-and-websockets-with-express-and-node-js/
+// https://www.kevinhooke.com/2017/04/02/serving-static-content-rest-endpoints-and-websockets-with-express-and-node-js/
 
 const express = require('express');
 const WebSocket = require('ws');

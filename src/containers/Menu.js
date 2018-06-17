@@ -23,7 +23,7 @@ Menu.propTypes = {
   onOnlineGameJoin: PropTypes.func.isRequired,
   gamesList: PropTypes.shape({
     isFetching: PropTypes.bool,
-    items: PropTypes.objectOf(PropTypes.object),
+    items: PropTypes.arrayOf(PropTypes.object),
     fetchingError: PropTypes.string,
     hoveredRow: PropTypes.number,
   }).isRequired,

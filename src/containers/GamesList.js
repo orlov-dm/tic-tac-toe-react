@@ -4,17 +4,6 @@ import { connect } from 'react-redux';
 import * as Actions from '../actions';
 
 class GamesList extends Component {
-  static renderGameHeaderField(header, field) {
-    return (
-      <div
-        key={`header-field-${field}`}
-        className={`field-${field} cell header-cell`}
-      >
-        {header[field]}
-      </div>
-    );
-  }
-
   constructor(props) {
     super(props);
     this.header = {
@@ -52,6 +41,17 @@ class GamesList extends Component {
     return Math.floor(index / indexesInRow) - 1; // -1 for header
   }
 
+  static renderGameHeaderField(header, field) {
+    return (
+      <div
+        key={`header-field-${field}`}
+        className={`field-${field} cell header-cell`}
+      >
+        {header[field]}
+      </div>
+    );
+  }
+
   renderBody() {
     const { games, hoveredRow } = this.props;
     let index = 0;
@@ -67,7 +67,7 @@ class GamesList extends Component {
 
   renderGameField(game, field, isHovered) {
     const hovered = isHovered ? ' hovered' : '';
-    const className = `field-${field} cell body-cell}${hovered}`;
+    const className = `field-${field} cell body-cell${hovered}`;
     return (
       <div
         key={`field-${field}-${game.id}`}
@@ -83,7 +83,7 @@ class GamesList extends Component {
 
   renderHeader() {
     const { header } = this;
-    return Object.keys(header).map(field => this.renderGameHeaderField(header, field));
+    return Object.keys(header).map(field => GamesList.renderGameHeaderField(header, field));
   }
 
   render() {
@@ -101,10 +101,14 @@ class GamesList extends Component {
 }
 
 GamesList.propTypes = {
-  hoveredRow: PropTypes.number.isRequired,
+  hoveredRow: PropTypes.number,
   games: PropTypes.arrayOf(PropTypes.object).isRequired,
   onGameJoin: PropTypes.func.isRequired,
   onRowHover: PropTypes.func.isRequired,
+};
+
+GamesList.defaultProps = {
+  hoveredRow: null,
 };
 
 const mapStateToProps = state => ({
