@@ -1,6 +1,5 @@
 import * as ActionTypes from '../constants/ActionTypes';
-import { gamesListAdd, gamesListRemove, onlineGameSetPlayerInfo, onlineGameSetInfo, setSettingsField, onlineGameSetTurn, onlineGameSetSquareValue } from '../actions';
-
+import { gamesListAdd, gamesListRemove, onlineGameSetPlayerInfo, onlineGameSetInfo, setSettingsField, onlineGameSetTurn, onlineGameSetSquareValue, onlineGameSetWinner } from '../actions';
 
 const setupSocket = (dispatch, port = 8888) => {
   const uri = `ws://${window.location.hostname}:${port}`;
@@ -62,6 +61,11 @@ const setupSocket = (dispatch, port = 8888) => {
       case ActionTypes.SET_SQUARE_VALUE: {
         const { index, value } = data;
         dispatch(onlineGameSetSquareValue(index, value));
+        break;
+      }
+      case ActionTypes.GAME_SET_WINNER: {
+        const { winner, winIndexes } = data;
+        dispatch(onlineGameSetWinner(winner, winIndexes));
         break;
       }
       default:

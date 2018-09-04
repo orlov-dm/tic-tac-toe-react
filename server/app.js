@@ -202,6 +202,21 @@ wss.on('connection', (ws /* , request */) => {
         }
         break;
       }
+      case ActionTypes.GAME_SET_WINNER: {
+        console.log('GAME_SET_WINNER', data);
+        const { gameID, winner, winIndexes } = data;
+        const game = gamesMap.get(gameID);
+        const secondPlayerID = game.player1.id === player.id ? game.player2.id : game.player1.id;
+        const client = playerClients.get(secondPlayerID);
+        if (client) {
+          send({
+            type: ActionTypes.GAME_SET_WINNER,
+            winner,
+            winIndexes,
+          }, client);
+        }
+        break;
+      }
       default:
       // todo
     }

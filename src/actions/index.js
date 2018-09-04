@@ -87,6 +87,10 @@ export const onlineGameSetTurn = turn => ({
 export const onlineGameSetPlayerInfo = player =>
   ({ type: ActionTypes.APP_ONLINE_SET_PLAYER_INFO, player });
 
+export const onlineGameSetWinner = (winner, winIndexes) => ({
+  type: ActionTypes.APP_ONLINE_SET_WINNER, winner, winIndexes,
+});
+
 export const requestGamesList = () => ({ type: ActionTypes.REQUEST_GAMES_LIST });
 export const receiveGamesList = response => ({ type: ActionTypes.RECEIVE_GAMES_LIST, response });
 export const failureGamesList = error => ({ type: ActionTypes.FAILURE_GAMES_LIST, error });

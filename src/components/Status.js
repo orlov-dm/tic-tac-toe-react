@@ -6,8 +6,15 @@ import faSync from '@fortawesome/fontawesome-free-solid/faSync';
 import Constants from '../constants';
 import Square from './Square';
 
-const getWinnerStatus = winner =>
-  [<div key={1}>Winner </div>, <Square key={2} isWinner value={winner} />];
+const getWinnerStatus = (winner, playAs) => {
+  const winnerStatus = [
+    <div key={1}>Winner </div>,
+    <Square key={2} isWinner value={winner} />,
+  ];
+  return playAs === winner ?
+    [...winnerStatus, <p key={3}>(You)</p>] :
+    winnerStatus;
+};
 
 const getDrawStatus = () => <div>{Constants.DRAW_ELEMENT_NAME}</div>;
 
@@ -53,7 +60,7 @@ const getStatusBar = (props) => {
     return getWaitingStatus();
   }
   if (winner) {
-    return getWinnerStatus(winner);
+    return getWinnerStatus(winner, playAs);
   }
   if (isGameFinished(values)) {
     return getDrawStatus();

@@ -13,22 +13,17 @@ const game = (state = defaultState(), action) => {
     case ActionTypes.GAME_RESET:
       return defaultState();
     case ActionTypes.GAME_TURN_CHANGE:
+    case ActionTypes.APP_ONLINE_SET_GAME_TURN:
       return {
         ...state,
         turn: action.turn,
       };
     case ActionTypes.GAME_SET_WINNER:
+    case ActionTypes.APP_ONLINE_SET_WINNER:
       return {
         ...state,
         winner: action.winner,
         winIndexes: action.winIndexes,
-      };
-
-    // from server
-    case ActionTypes.APP_ONLINE_SET_GAME_TURN:
-      return {
-        ...state,
-        turn: action.turn,
       };
     default:
       return state;

@@ -48,6 +48,14 @@ function* onlineGameSetSquareValue({ socket }, action) {
   }));
 }
 
+function* onlineGameSetWinner({ socket }, action) {
+  const gameID = yield select(getOnlineGameID);
+  socket.send(JSON.stringify({
+    ...action,
+    gameID,
+  }));
+}
+
 // use them in parallel
 export default function* rootSaga(params) {
   yield takeEvery(types.REQUEST_GAMES_LIST, getGamesList);
@@ -56,4 +64,5 @@ export default function* rootSaga(params) {
   yield takeEvery(types.APP_ONLINE_GAME_END, onlineGameEnd, params);
   yield takeEvery(types.GAME_TURN_CHANGE, onlineGameTurnChange, params);
   yield takeEvery(types.SET_SQUARE_VALUE, onlineGameSetSquareValue, params);
+  yield takeEvery(types.GAME_SET_WINNER, onlineGameSetWinner, params);
 }
