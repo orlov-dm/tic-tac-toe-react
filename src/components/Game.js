@@ -22,6 +22,12 @@ class Game extends Component {
       };
     }
     this.reinit();
+
+    this.handleSquareClick = this.handleSquareClick.bind(this);
+    this.handleRestart = this.handleRestart.bind(this);
+    this.isSecondPlayerReady = this.isSecondPlayerReady.bind(this);
+    this.handleSave = this.handleSave.bind(this);
+    this.handleSettingsClick = this.handleSettingsClick.bind(this);
   }
 
   componentDidUpdate(prevProps/* , prevState, snapshot */) {
@@ -137,26 +143,26 @@ class Game extends Component {
             turn={turn}
             values={boardValues}
             winIndexes={winIndexes}
-            onClick={(row, column) => this.handleSquareClick(row, column)}
+            onClick={this.handleSquareClick}
           />
           <Status
             winner={winner}
             values={boardValues}
             turn={turn}
-            onRestart={() => this.handleRestart()}
+            onRestart={this.handleRestart}
             onExit={onGameEnd}
-            isSecondPlayerReady={this.isSecondPlayerReady()}
+            isSecondPlayerReady={this.isSecondPlayerReady}
             playAs={playAs}
           />
         </div>
         <SettingsPanel
           isOpened={settingsOpened}
-          onSave={() => this.handleSave()}
+          onSave={this.handleSave}
           {...settings}
         />
         <SettingsButton
           isOpened={settingsOpened}
-          onClick={() => this.handleSettingsClick()}
+          onClick={this.handleSettingsClick}
         />
       </div>
     );

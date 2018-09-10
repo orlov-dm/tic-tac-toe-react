@@ -26,6 +26,10 @@ class SettingsPanel extends Component {
       playWithAI,
       playAs,
     };
+
+    this.handleFieldsCountChange = this.handleFieldsCountChange.bind(this);
+    this.handleWinCountChange = this.handleWinCountChange.bind(this);
+    this.handlePlayWithAIChange = this.handlePlayWithAIChange.bind(this);
   }
 
   getSettings() {
@@ -65,21 +69,21 @@ class SettingsPanel extends Component {
     return settings;
   }
 
-  handleFieldsCountChange(count) {
+  handleFieldsCountChange({ target: { value: count } }) {
     const fieldsCount = parseInt(count, 10);
     this.setState({
       fieldsCount,
     });
   }
 
-  handleWinCountChange(count) {
+  handleWinCountChange({ target: { value: count } }) {
     const winCount = parseInt(count, 10);
     this.setState({
       winCount,
     });
   }
 
-  handlePlayWithAIChange(playWithAI) {
+  handlePlayWithAIChange({ target: { checked: playWithAI } }) {
     this.setState({
       playWithAI,
     });
@@ -110,7 +114,7 @@ class SettingsPanel extends Component {
                 max={Constants.MAX_FIELD_SIZE}
                 type="number"
                 value={fieldsCount}
-                onChange={event => this.handleFieldsCountChange(event.target.value)}
+                onChange={this.handleFieldsCountChange}
               />
             </div>
             Field size:
@@ -123,7 +127,7 @@ class SettingsPanel extends Component {
               max={fieldsCount}
               type="number"
               value={winCount}
-              onChange={event => this.handleWinCountChange(event.target.value)}
+              onChange={this.handleWinCountChange}
             />
           </label>
 
@@ -134,7 +138,7 @@ class SettingsPanel extends Component {
                 type="checkbox"
                 id="ai_play"
                 checked={playWithAI}
-                onChange={event => this.handlePlayWithAIChange(event.target.checked)}
+                onChange={this.handlePlayWithAIChange}
               />
             </div>
           </label>

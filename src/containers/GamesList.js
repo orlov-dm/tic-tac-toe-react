@@ -13,6 +13,9 @@ class GamesList extends Component {
     };
 
     this.rowToID = {};
+
+    this.onCellMouseOver = this.onCellMouseOver.bind(this);
+    this.onCellDoubleClick = this.onCellDoubleClick.bind(this);
   }
 
   onCellDoubleClick(event) {
@@ -72,9 +75,9 @@ class GamesList extends Component {
       <div
         key={`field-${field}-${game.id}`}
         className={className}
-        onMouseOver={event => this.onCellMouseOver(event)}
-        onFocus={event => this.onCellMouseOver(event)} // todo check
-        onDoubleClick={event => this.onCellDoubleClick(event)}
+        onMouseOver={this.onCellMouseOver}
+        onFocus={this.onCellMouseOver} // todo check
+        onDoubleClick={this.onCellDoubleClick}
       >
         {game[field]}
       </div>
