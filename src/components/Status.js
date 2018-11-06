@@ -25,7 +25,7 @@ const getNextTurnStatus = (turn, playAs) => {
   ];
   return playAs === turn ?
     [...nextTurnStatus, <p key={3}>(You)</p>] :
-    nextTurnStatus;
+    [...nextTurnStatus, <p key={3}>(Opponent)</p>];
 };
 
 const getWaitingStatus = () => <div>Waiting for second player</div>;
