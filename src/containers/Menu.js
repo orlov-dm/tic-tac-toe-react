@@ -24,7 +24,7 @@ Menu.propTypes = {
   gamesList: PropTypes.shape({
     isFetching: PropTypes.bool,
     items: PropTypes.arrayOf(PropTypes.object),
-    fetchingError: PropTypes.string,
+    fetchingError: PropTypes.object,
     hoveredRow: PropTypes.number,
   }).isRequired,
 };
