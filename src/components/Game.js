@@ -34,16 +34,24 @@ class Game extends Component {
     if (this.props.isOnline) {
       return;
     }
+    const { game, settings } = this.props;
+    const { turn } = game;
+
+    const turnChanged = turn !== prevProps.game.turn;
+    const settingsChanged = settings !== prevProps.settings;
+    if (turnChanged || settingsChanged) {
+      this.aiMove();
+    }
+  }
+
+  aiMove() {
     const { settings, game } = this.props;
     const { playWithAI, playAs } = settings;
     const { winner, turn } = game;
 
-    const turnChanged = turn !== prevProps.game.turn;
     if (playWithAI &&
       !winner &&
-      turnChanged &&
-      playAs !== turn
-    ) {
+      playAs !== turn) {
       const { boardValues } = this.props;
       setTimeout(() => {
         AI.board = boardValues;
@@ -151,7 +159,7 @@ class Game extends Component {
             turn={turn}
             onRestart={this.handleRestart}
             onExit={onGameEnd}
-            isSecondPlayerReady={this.isSecondPlayerReady}
+            isSecondPlayerReady={this.isSecondPlayerReady()}
             playAs={playAs}
           />
         </div>
@@ -191,7 +199,10 @@ Game.propTypes = {
     winIndexes: PropTypes.array,
     isOnline: PropTypes.bool,
   }).isRequired,
-  onlineOpponent: PropTypes.number,
+  onlineOpponent: PropTypes.shape({
+    id: PropTypes.number,
+    name: PropTypes.string,
+  }),
   boardValues: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
 };
 
