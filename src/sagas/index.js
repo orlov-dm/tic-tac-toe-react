@@ -34,6 +34,9 @@ function onlineGameEnd({ socket }, action) {
 const getOnlineGameID = state => state.app.onlineGameID;
 function* onlineGameTurnChange({ socket }, action) {
   const gameID = yield select(getOnlineGameID);
+  if (!gameID) {
+    return;
+  }
   socket.send(JSON.stringify({
     ...action,
     gameID,
@@ -42,6 +45,9 @@ function* onlineGameTurnChange({ socket }, action) {
 
 function* onlineGameSetSquareValue({ socket }, action) {
   const gameID = yield select(getOnlineGameID);
+  if (!gameID) {
+    return;
+  }
   socket.send(JSON.stringify({
     ...action,
     gameID,
@@ -50,6 +56,9 @@ function* onlineGameSetSquareValue({ socket }, action) {
 
 function* onlineGameSetWinner({ socket }, action) {
   const gameID = yield select(getOnlineGameID);
+  if (!gameID) {
+    return;
+  }
   socket.send(JSON.stringify({
     ...action,
     gameID,
