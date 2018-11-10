@@ -107,6 +107,7 @@ class SettingsPanel extends Component {
       <div className={`panel-settings${isOpenedClass}`}>
         <div>
           <label htmlFor="fields_count">
+            Field size:
             <div>
               <input
                 id="fields_count"
@@ -117,18 +118,19 @@ class SettingsPanel extends Component {
                 onChange={this.handleFieldsCountChange}
               />
             </div>
-            Field size:
           </label>
           <label htmlFor="win_count">
             Fields to win:
-            <input
-              id="win_count"
-              min="1"
-              max={fieldsCount}
-              type="number"
-              value={winCount}
-              onChange={this.handleWinCountChange}
-            />
+            <div>
+              <input
+                id="win_count"
+                min="1"
+                max={fieldsCount}
+                type="number"
+                value={winCount}
+                onChange={this.handleWinCountChange}
+              />
+            </div>
           </label>
 
           <label htmlFor="ai_play">
@@ -143,6 +145,8 @@ class SettingsPanel extends Component {
             </div>
           </label>
 
+          <div />
+          
           <button className={`button-square ${playAsX}`} onClick={() => this.handlePlayAs(Constants.X_ELEMENT)}>
             <Square value={Constants.X_ELEMENT} />
           </button>
